@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <title><%= t("#{params[:controller]}.#{controller.action_name}") %> | Студенты &laquo;Контингент&raquo;</title>
+  <%= stylesheet_link_tag "screen.css" %>
+  <%= javascript_include_tag "jquery.min", "jquery.tablesorter.min.js", "rails", "application" %>
+  <%= csrf_meta_tag %>
+  <!--[if IE 6]>
+    <%= stylesheet_link_tag "ie6" %>
+  <![endif]-->
+</head>
+<body>
+  <div class="content">
+    <%= flash[:notice] %>
+    <%= yield %>
+  </div>
+</body>
+</html>

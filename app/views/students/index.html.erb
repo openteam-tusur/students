@@ -1,0 +1,36 @@
+<h1>Список студентов</h1>
+
+<%= render "form" %>
+
+<% unless @students.empty? %>
+  <table class="tablesorter">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Фамилия, Имя, Отчество</th>
+        <th>Дата рождения</th>
+        <th>Факультет</th>
+        <th>Кафедра</th>
+        <th>Курс</th>
+        <th>Группа</th>
+        <th>В ГПО</th>
+        <th>Учится</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @students.each do |student| %>
+      <tr>
+        <td><%= link_to student.study_id, student_path(student.study_id) %></td>
+        <td><%= student %></td>
+        <td><%= I18n.l student.born_on, :format => "%d.%m.%Y" %></td>
+        <td><abbr title="<%= student.faculty %>"><%= student.faculty.abbr %></abbr></td>
+        <td><abbr title="<%= student.subfaculty %>"><%= student.subfaculty.abbr %></abbr></td>
+        <td><%= student.year %></td>
+        <td><%= student.group %></td>
+        <td><%= student.human_in_gpo %></td>
+        <td><%= student.human_learns %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,0 +1,8 @@
+auth:
+  login:    login
+  password: password
+contingent:
+  namespace: "http://contingent.url/namespace"
+  endpoint: "http://contingent.url/endpoint"
+secret_token: SOME_HUGE_STRING
+

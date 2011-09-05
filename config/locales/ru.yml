@@ -1,0 +1,35 @@
+ru:
+  students:
+    index: Список
+    show: Просмотр
+
+  activemodel:
+
+  activerecord:
+    student: Студент
+    student_search: Поиск студента
+
+    attributes:
+      student: &student
+        study_id: ID
+        name: Фамилия, Имя, Отчество
+        firstname: Имя
+        lastname: Фамилия
+        patronymic: Отчество
+        born_on: Дата рождения
+        faculty: Факультет
+        subfaculty: Кафедра
+        year: Курс
+        group: Группа
+        learns: Учится?
+        learns_enum:
+          "yes": да
+          "no": нет
+        in_gpo: В ГПО?
+        in_gpo_enum:
+          "yes": да
+          "no": нет
+
+  time:
+    formats:
+      default: "%d.%m.%Y"
