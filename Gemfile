@@ -13,3 +13,8 @@ gem 'rails', '~> 3.0.9'
 gem 'russian'
 gem 'savon'
 gem 'show_for'
+
+group :production do
+  gem 'unicorn'
+end
+
