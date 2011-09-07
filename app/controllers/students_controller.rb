@@ -1,19 +1,23 @@
 class StudentsController < ApplicationController
+  respond_to :html, :json, :xml
   def index
     @student_search = StudentSearch.new(params[:student_search] || {})
-    @students = @student_search.students
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @students }
-    end
+    respond_with @students = @student_search.students
   end
 
   def show
-    @student =  Student.find(params[:id])
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @student }
-    end
+    respond_with @student =  Student.find(params[:id])
+  end
+
+  def check
+    student_search = StudentSearch.new :lastname   => params[:lastname],
+                                       :firstname  => params[:firstname],
+                                       :patronymic => params[:patronymic],
+                                       :group      => params[:group]
+
+    students = student_search.students.select{ |student| student.born_on.to_date.to_s == params[:born_on] }
+
+    render :text => students.one? ? students.first.study_id : nil
   end
 
 end

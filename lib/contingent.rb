@@ -23,7 +23,7 @@ class Contingent
     }
     filter.delete_if { |key, value|  value.blank? }
     return [] if filter.empty?
-    filter["StudentStateId"] = search.learns_yes? ? 1 : 2
+    filter["StudentStateId"] = search.learns_no? ? 0 : 1
     find_students(filter).map { | hash | student_from hash }
   end
 
