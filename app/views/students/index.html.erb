@@ -36,6 +36,6 @@
     </tbody>
   </table>
 <% else %>
-  <p class="empty">Нет результатов поиска</p>
+  <%= content_tag :p, "Нет результатов поиска", :class => "empty" unless params[:student_search].blank? %>
 <% end %>
 
