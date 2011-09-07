@@ -1,9 +1,12 @@
 <h1>Студент</h1>
 <%= show_for @student do | student | %>
-  <%= student.attributes :study_id, :lastname, :firstname, :patronymic, :born_on %>
+  <%= student.attribute :study_id %>
+  <%= student.attribute :name %>
+  <%= student.attribute :born_on %>
   <%= student.association :faculty %>
   <%= student.association :subfaculty %>
   <%= student.attributes :year, :group %>
   <%= student.attributes :learns, :in_gpo %>
 <% end %>
 <p><%= link_to 'Вернуться', :back, :class => "button" %></p>
+
