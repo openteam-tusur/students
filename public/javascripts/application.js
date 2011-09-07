@@ -9,7 +9,6 @@ $(function() {
         };
       }
     });
-
     $.tablesorter.addParser({
       id: "birthday",
       is: function(s) {
@@ -20,10 +19,9 @@ $(function() {
       },
       type: 'numeric'
     });
-
-
     $(".tablesorter").tablesorter({
       widgets: ['indexFirstColumn'],
+      sortList: [[2,0]],
       headers: {
         0: {
           sorter: false
