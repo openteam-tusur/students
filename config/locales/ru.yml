@@ -12,7 +12,7 @@ ru:
     attributes:
       student: &student
         study_id: ID
-        name: Фамилия, Имя, Отчество
+        name: Фамилия, имя, отчество
         firstname: Имя
         lastname: Фамилия
         patronymic: Отчество
@@ -33,3 +33,4 @@ ru:
   time:
     formats:
       default: "%d.%m.%Y"
+
