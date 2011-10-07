@@ -17,7 +17,12 @@ class StudentsController < ApplicationController
 
     students = student_search.students.select{ |student| student.born_on.to_date.to_s == params[:born_on] }
 
-    render :text => students.one? ? students.first.study_id : nil
+    if students.one?
+      student = students.first
+      render :text => [student.study_id, student.subfaculty.abbr].join(":")
+    else
+      render :text => nil
+    end
   end
 
 end
