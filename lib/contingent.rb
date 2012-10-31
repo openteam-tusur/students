@@ -1,8 +1,13 @@
 # encoding: utf-8
 require 'singleton'
+require 'ostruct'
 
 class Contingent
   include Singleton
+
+  class << self
+    delegate :login, :logged_in?, :strudents, :student, :subfaculties, :to => :instance
+  end
 
   def login
     call "LogOn", Settings[:auth] unless logged_in?
@@ -10,7 +15,7 @@ class Contingent
 
   def logged_in?
     Rails.cache.fetch(:logged_in?, :expires_in => 10.minutes) do
-      call "isLogin"
+      call("isLogin").first
     end
   end
 
@@ -31,6 +36,16 @@ class Contingent
     student_from find_student(id)
   end
 
+  def subfaculties
+    login
+    call "GetActiveSubFacultys"
+  end
+
+  def groups
+    login
+    call "GetAllGroups"
+  end
+
 private
   def client
     @client ||= Savon::Client.new do | wsdl, http |
@@ -49,9 +64,14 @@ private
   end
 
   def call(method, params={})
-    raw_response(method, params).to_hash[:"#{method.underscore}_response"][:"#{method.underscore}_result"]
+    Rails.cache.fetch("#{method}:#{params}", :expires_in => 23.hours) do
+      result  =raw_response(method, params).to_hash[:"#{method.underscore}_response"][:"#{method.underscore}_result"]
+      if result.is_a?(Hash) && result.keys.one? && result.keys.grep(/_dto$/).one?
+        result = result[result.keys.first]
+      end
+      result = [*result].map{|hash| hash.is_a?(Hash) ? OpenStruct.new(hash): hash}
+    end
   end
-
 
   def raw_response(method, params)
     client.request method, :xmlns => namespace do
@@ -64,7 +84,6 @@ private
     Rails.cache.fetch(params.to_s, :expires_in => 23.hours) do
       login
       response = call("GetStudentsByCriteria", "studentCriteria" => params) || {}
-      result = response[:student_dto] || []
       result = [result] if result.is_a? Hash
       result
     end
@@ -88,8 +107,8 @@ private
       :faculty => faculty_from(hash),
       :year => hash[:group][:course],
       :group => hash[:group][:group_name],
-      :learns => hash[:student_state][:name] == "Активный" ? :yes: :no,
-      :in_gpo => hash[:gpo]? "yes": "no",
+      :learns => hash[:student_state][:name] == "Активный" ? :yes : :no,
+      :in_gpo => hash[:gpo]? :yes : :no,
     )
   end
 
