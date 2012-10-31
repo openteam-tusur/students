@@ -1,18 +1,26 @@
 source :rubygems
 
-gem 'compass'
-gem 'configliere'
-gem 'escape_utils'
-gem 'fancy-buttons'
-gem 'formtastic'
-gem 'httpclient'
-gem 'has_enum'
-gem 'jquery-rails'
-gem 'racc'
-gem 'rails', '~> 3.0.9'
-gem 'russian'
-gem 'savon'
-gem 'show_for'
+group :assets do
+  gem 'coffee-rails'
+  gem 'sass-rails'
+  gem 'therubyracer'
+  gem 'uglifier'
+end
+
+group :default do
+  gem 'compass-rails'
+  gem 'configliere'
+  gem 'enumerize'
+  #gem 'escape_utils'
+  gem 'formtastic'
+  gem 'httpclient'
+  gem 'jquery-rails'
+  gem 'openteam-commons'
+  gem 'rails'
+  gem 'russian'
+  gem 'savon'
+  gem 'show_for'
+end
 
 group :production do
   gem 'unicorn'
