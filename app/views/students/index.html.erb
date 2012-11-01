@@ -31,8 +31,8 @@
         <td><abbr title="<%= student.subfaculty.name %>"><%= student.subfaculty.abbr %></abbr></td>
         <td><%= student.year %></td>
         <td><%= student.group %></td>
-        <td><%= student.in_gpo.text %></td>
-        <td><%= student.learns.text %></td>
+        <td><%= yes_no student.in_gpo %></td>
+        <td><%= yes_no student.learns %></td>
       </tr>
     <% end %>
     </tbody>

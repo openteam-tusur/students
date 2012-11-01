@@ -3,6 +3,6 @@ class Search < Model
   attribute :patronymic
   attribute :lastname
   attribute :group
-  attribute :include_inactive, :type => ActiveAttr::Typecasting::Boolean
+  attribute :include_inactive
   attribute :person_id
 end

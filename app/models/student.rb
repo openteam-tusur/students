@@ -13,9 +13,6 @@ class Student < Model
 
   delegate :faculty, :faculty=, :to => :subfaculty
 
-  enumerize :learns, in: %w[yes no], predicates: { prefix: true }
-  enumerize :in_gpo, in: %w[yes no], predicates: { prefix: true }
-
   def name
     "#{lastname} #{firstname} #{patronymic}"
   end

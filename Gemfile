@@ -10,7 +10,6 @@ end
 group :default do
   gem 'active_attr'
   gem 'compass-rails'
-  gem 'enumerize'
   gem 'httpclient'
   gem 'openteam-commons'
   gem 'rails'

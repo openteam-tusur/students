@@ -26,7 +26,7 @@ class Contingent
 
     filter['StudentStateId'] = params[:include_inactive].to_i.zero? ? 1 : 0
 
-    students_from(Rails.cache.fetch(params.to_s) do
+    students_from(Rails.cache.fetch(filter.to_s) do
       call(:get_students_by_criteria, 'studentCriteria' => filter)
     end)
   end
@@ -61,8 +61,8 @@ class Contingent
         :faculty => faculty_from(hash),
         :year => hash[:group][:course],
         :group => hash[:group][:group_name],
-        :learns => hash[:student_state][:name] == "Активный" ? :yes : :no,
-        :in_gpo => hash[:gpo]? :yes : :no,
+        :learns => hash[:student_state][:name] == "Активный",
+        :in_gpo => hash[:gpo],
       )
     end
   end
