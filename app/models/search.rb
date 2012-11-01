@@ -4,4 +4,5 @@ class Search < Model
   attribute :lastname
   attribute :group
   attribute :include_inactive, :type => ActiveAttr::Typecasting::Boolean
+  attribute :person_id
 end

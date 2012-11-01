@@ -11,7 +11,7 @@ class StudentsController < ApplicationController
   end
 
   def check
-    students = Contingent.students(params).select{ |student| student.born_on.to_date.to_s == params[:born_on] }
+    students = Contingent.students(params.merge(:include_inactive => 1)).select{ |student| student.born_on.to_date.to_s == params[:born_on] }
 
     if students.one?
       student = students.first

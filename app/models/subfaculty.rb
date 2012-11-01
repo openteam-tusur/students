@@ -1,3 +1,3 @@
 class Subfaculty < Faculty
-  attr_accessor :faculty
+  attribute :faculty
 end

@@ -1,3 +1,4 @@
 class Faculty < Model
-  attr_accessor :name, :abbr
+  attribute :name
+  attribute :abbr
 end
