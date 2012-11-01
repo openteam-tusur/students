@@ -22,6 +22,7 @@ end
 group :development do
   gem 'debugger'
   gem 'debugger-completion'
+  gem 'rvm-capistrano'
 end
 
 group :production do
