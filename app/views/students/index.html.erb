@@ -23,14 +23,14 @@
       <tr>
         <td><%= index + 1 %></td>
         <td><%= link_to student.study_id, student_path(student.study_id) %></td>
-        <td><%= student %></td>
+        <td><%= student.name %></td>
         <td><%= I18n.l student.born_on, :format => "%d.%m.%Y" %></td>
         <td><abbr title="<%= student.faculty %>"><%= student.faculty.abbr %></abbr></td>
         <td><abbr title="<%= student.subfaculty %>"><%= student.subfaculty.abbr %></abbr></td>
         <td><%= student.year %></td>
         <td><%= student.group %></td>
-        <td><%= student.human_in_gpo %></td>
-        <td><%= student.human_learns %></td>
+        <td><%= student.in_gpo.text %></td>
+        <td><%= student.learns.text %></td>
       </tr>
     <% end %>
     </tbody>

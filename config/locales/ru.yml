@@ -4,23 +4,26 @@ ru:
     show: Просмотр
 
   activemodel:
-    student: Студент
-    student_search: Поиск студента
+    student:  Студент
+    search:   Поиск студента
 
     attributes:
-      student: &student
-        study_id: ID
-        name: Фамилия, имя, отчество
-        firstname: Имя
-        lastname: Фамилия
-        patronymic: Отчество
-        born_on: Дата рождения
-        faculty: Факультет
-        subfaculty: Кафедра
-        year: Курс
-        group: Группа
-        learns: Учится?
-        in_gpo: В ГПО?
+      search: &search
+        lastname:    Фамилия
+        firstname:   Имя
+        patronymic:  Отчество
+        name:        Фамилия, имя, отчество
+        group:       Группа
+        learns:      Учится?
+
+      student:
+        <<: *search
+        study_id:    ID
+        born_on:     Дата рождения
+        faculty:     Факультет
+        in_gpo:      В ГПО?
+        subfaculty:  Кафедра
+        year:        Курс
 
   enumerize:
     student:

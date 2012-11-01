@@ -2,21 +2,16 @@ class StudentsController < ApplicationController
   respond_to :html, :json
 
   def index
-    @student_search = StudentSearch.new(params[:student_search] || {})
-    respond_with @students = @student_search.students
+    @search = Search.new(params[:search] || params)
+    respond_with @students = Contingent.instance.students(@search.attributes)
   end
 
   def show
-    respond_with @student =  Student.find(params[:id])
+    respond_with @student = Contingent.instance.students(:study_id => params[:id]).first
   end
 
   def check
-    student_search = StudentSearch.new :lastname   => params[:lastname],
-                                       :firstname  => params[:firstname],
-                                       :patronymic => params[:patronymic],
-                                       :group      => params[:group]
-
-    students = student_search.students.select{ |student| student.born_on.to_date.to_s == params[:born_on] }
+    students = Contingent.students(params).select{ |student| student.born_on.to_date.to_s == params[:born_on] }
 
     if students.one?
       student = students.first

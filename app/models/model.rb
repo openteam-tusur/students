@@ -1,5 +1,5 @@
 class Model
-  include Enumerize
+  extend Enumerize
   include ActiveAttr::BasicModel
   include ActiveAttr::MassAssignment
   include ActiveAttr::QueryAttributes

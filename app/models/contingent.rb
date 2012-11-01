@@ -11,17 +11,23 @@ class Contingent
   actions :log_on, :is_login, :get_students_by_criteria, :get_student_by_id, :get_all_active_groups
 
   def students(params)
+    params ||= {}
+    params.symbolize_keys!
     filter = {
       'GroupName'  => params[:group],
       'LastName'   => params[:lastname],
       'FirstName'  => params[:firstname],
-      'MiddleName' => params[:patronymic]
+      'MiddleName' => params[:patronymic],
+      'StudyId'    => params[:study_id],
+      'PersonId'   => params[:person_id]
     }
-    filter.delete_if { |key, value|  value.blank? }
+    filter.delete_if { |key, value| value.try(:strip!); value.blank? }
     return [] if filter.empty?
-    filter['StudentStateId'] = params[:learns] == 'no' ? 0 : 1
+    filter['StudentStateId'] = params['learns'] == 'no' ? 0 : 1
 
-    students_from(call(:get_students_by_criteria, 'studentCriteria' => filter))
+    students_from(Rails.cache.fetch(params.to_s) do
+      call(:get_students_by_criteria, 'studentCriteria' => filter)
+    end)
   end
 
   def groups
@@ -40,9 +46,12 @@ class Contingent
   end
 
   def students_from(students_result)
-    students_result[:student_dto].map do |hash|
+    students = students_result[:student_dto]
+    students = [students] if students.is_a?(Hash)
+    students.map do |hash|
       Student.new(
         :study_id => hash[:study_id],
+        :person_id => hash[:person_id],
         :firstname => hash[:first_name],
         :patronymic => hash[:middle_name],
         :lastname => hash[:last_name],

@@ -6,7 +6,8 @@
   <%= student.association :faculty %>
   <%= student.association :subfaculty %>
   <%= student.attributes :year, :group %>
-  <%= student.attributes :learns, :in_gpo %>
+  <%= student.attribute :learns, :value => :text %>
+  <%= student.attribute :in_gpo, :value => :text %>
 <% end %>
 <p><%= link_to 'Вернуться', :back, :class => "button" %></p>
 
