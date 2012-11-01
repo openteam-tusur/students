@@ -23,7 +23,8 @@ class Contingent
     }
     filter.delete_if { |key, value| value.try(:strip!); value.blank? }
     return [] if filter.empty?
-    filter['StudentStateId'] = params['learns'] == 'no' ? 0 : 1
+
+    filter['StudentStateId'] = params[:include_inactive] == '1' ? 0 : 1
 
     students_from(Rails.cache.fetch(params.to_s) do
       call(:get_students_by_criteria, 'studentCriteria' => filter)

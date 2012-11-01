@@ -9,30 +9,34 @@ ru:
 
     attributes:
       search: &search
-        lastname:    Фамилия
-        firstname:   Имя
-        patronymic:  Отчество
-        name:        Фамилия, имя, отчество
-        group:       Группа
-        learns:      Учится?
+        firstname:         Имя
+        group:             Группа
+        lastname:          Фамилия
+        name:              Фамилия, имя, отчество
+        patronymic:        Отчество
+        include_inactive:  Показать тех, кто не учится
 
       student:
         <<: *search
-        study_id:    ID
         born_on:     Дата рождения
         faculty:     Факультет
         in_gpo:      В ГПО?
+        learns:      Учится?
+        study_id:    ID
         subfaculty:  Кафедра
         year:        Курс
 
   enumerize:
+    search:
+      learns: &yes_no
+        "yes": да
+        "no": нет
     student:
       learns:
-        "yes": да
-        "no": нет
+        <<: *yes_no
       in_gpo:
-        "yes": да
-        "no": нет
+        <<: *yes_no
+
 
 
   time:

@@ -3,7 +3,7 @@
   <%= form.input :firstname %>
   <%= form.input :patronymic %>
   <%= form.input :group %>
-  <%= form.input :learns, :required => false %>
+  <%= form.input :include_inactive, :as => :boolean %>
 
   <%= form.button :submit, 'Искать', :class => "button", :name => nil %>
   <%= link_to "Очистить", root_path, :class => "button" %>
