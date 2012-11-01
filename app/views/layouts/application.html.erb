@@ -3,12 +3,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
   <title><%= t("#{params[:controller]}.#{controller.action_name}") %> | Студенты &laquo;Контингент&raquo;</title>
-  <%= stylesheet_link_tag "screen.css" %>
-  <%= javascript_include_tag "jquery.min", "jquery.tablesorter.min.js", "rails", "application" %>
+  <%= stylesheet_link_tag "application" %>
+  <%= javascript_include_tag "application" %>
   <%= csrf_meta_tag %>
-  <!--[if IE 6]>
-    <%= stylesheet_link_tag "ie6" %>
-  <![endif]-->
 </head>
 <body>
   <div class="content">

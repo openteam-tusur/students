@@ -1,5 +1,6 @@
 class StudentsController < ApplicationController
-  respond_to :html, :json, :xml
+  respond_to :html, :json
+
   def index
     @student_search = StudentSearch.new(params[:student_search] || {})
     respond_with @students = @student_search.students

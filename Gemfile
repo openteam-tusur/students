@@ -1,25 +1,28 @@
 source :rubygems
 
 group :assets do
-  gem 'coffee-rails'
+  gem 'jquery-rails'
   gem 'sass-rails'
   gem 'therubyracer'
   gem 'uglifier'
 end
 
 group :default do
+  gem 'active_attr'
   gem 'compass-rails'
-  gem 'configliere'
   gem 'enumerize'
-  #gem 'escape_utils'
-  gem 'formtastic'
   gem 'httpclient'
-  gem 'jquery-rails'
   gem 'openteam-commons'
   gem 'rails'
   gem 'russian'
   gem 'savon'
   gem 'show_for'
+  gem 'simple_form'
+end
+
+group :development do
+  gem 'debugger'
+  gem 'debugger-completion'
 end
 
 group :production do

@@ -1,14 +1,11 @@
-<%= semantic_form_for @student_search, :url => '', :html => { :method => :get } do | form | %>
-  <%= form.inputs do %>
-    <%= form.input :lastname, :input_html => { :class => "focus_first" } %>
-    <%= form.input :firstname %>
-    <%= form.input :patronymic %>
-    <%= form.input :group %>
-    <%= form.input :learns, :required => false %>
-  <% end %>
-  <%= form.buttons do %>
-    <%= form.commit_button 'Искать', :button_html => { :class => "button", :name => nil } %>
-    <li><%= link_to "Очистить", root_path, :class => "button" %></li>
-  <% end %>
+<%= simple_form_for @student_search, :url => '', :html => { :method => :get } do | form | %>
+  <%= form.input :lastname, :input_html => { :class => "focus_first" } %>
+  <%= form.input :firstname %>
+  <%= form.input :patronymic %>
+  <%= form.input :group %>
+  <%= form.input :learns, :required => false %>
+
+  <%= form.button :submit, 'Искать', :class => "button", :name => nil %>
+  <%= link_to "Очистить", root_path, :class => "button" %>
 <% end %>
 

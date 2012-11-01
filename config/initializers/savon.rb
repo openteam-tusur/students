@@ -3,4 +3,3 @@ Savon.configure do |config|
 end
 
 HTTPI.log = false
-

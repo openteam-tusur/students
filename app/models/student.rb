@@ -1,48 +1,39 @@
 class Student < Model
   attr_accessor :subfaculty
 
-  column :study_id,           :integer
-  column :firstname,          :string
-  column :patronymic,         :string
-  column :lastname,           :string
-  column :year,               :integer
-  column :group,              :string
-  column :born_on,            :date
-  column :learns,             :string
-  column :in_gpo,             :string
+  #attr_accessor :group, :lastname, :firstname, :patronymic, :learns, :in_gpo
+  attribute :study_id   # Integer
+  attribute :firstname  # String
+  attribute :patronymic # String
+  attribute :lastname   # String
+  attribute :year       # Integer
+  attribute :group      # String
+  attribute :born_on    # Date
+  attribute :learns     # String
+  attribute :in_gpo     # String
 
-  delegate :faculty, :faculty=, :to => :subfaculty
+  #delegate :faculty, :faculty=, :to => :subfaculty
 
-  has_enums
+  enumerize :learns, in: %w[yes no], predicates: { prefix: true }
+  enumerize :in_gpo, in: %w[yes no], predicates: { prefix: true }
 
-  def self.find(*args)
-    options = args.extract_options!
-    if args.first == :all
-      Contingent.instance.students(options)
-    else
-      Contingent.instance.student(args.first)
-    end
-  end
+  ##has_enums
 
-  def name
-    "#{lastname} #{firstname} #{patronymic}"
-  end
+  #def self.find(*args)
+    #options = args.extract_options!
+    #if args.first == :all
+      #Contingent.instance.students(options)
+    #else
+      #Contingent.instance.student(args.first)
+    #end
+  #end
 
-  def to_param
-    study_id
-  end
+  #def name
+    #"#{lastname} #{firstname} #{patronymic}"
+  #end
 
-  def to_xml(options = {})
-    builder = options[:builder] || Builder::XmlMarkup.new
-    builder.student {
-      builder.id          self.id
-      builder.firstname   { |text| text << self.firstname  }
-      builder.patronymic  { |text| text << self.patronymic }
-      builder.lastname    { |text| text << self.lastname   }
-      builder.born_on     self.born_on
-      builder.in_gpo      self.in_gpo
-      builder.learns      self.learns
-    }
-  end
+  #def to_param
+    #study_id
+  #end
 
 end
