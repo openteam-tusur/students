@@ -18,7 +18,7 @@ set :gateway, gateway
 set :rails_env, "production"
 set :deploy_to, "/srv/tusur/#{application}"
 set :use_sudo, false
-set :unicorn_instance_name, "unicorn"
+set :unicorn_instance_name, "tusur-betastudents"
 
 set :scm, :git
 set :repository, "https://github.com/openteam-tusur/students.git"
