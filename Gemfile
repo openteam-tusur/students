@@ -9,6 +9,7 @@ end
 
 group :default do
   gem 'active_attr'
+  gem 'attribute_normalizer'
   gem 'compass-rails'
   gem 'httpclient'
   gem 'openteam-commons'

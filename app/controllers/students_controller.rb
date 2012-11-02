@@ -1,17 +1,18 @@
 class StudentsController < ApplicationController
   respond_to :html, :json
+  before_filter :set_search
 
   def index
-    @search = Search.new(params[:search] || params)
-    respond_with @students = Contingent.instance.students(@search.attributes)
+    respond_with @students = Contingent.instance.students(@search)
   end
 
   def show
-    respond_with @student = Contingent.instance.students(:study_id => params[:id]).first
+    @search.include_inactive = 1
+    respond_with @student = Contingent.instance.students(@search).first
   end
 
   def check
-    students = Contingent.students(params.merge(:include_inactive => 1)).select{ |student| student.born_on.to_date.to_s == params[:born_on] }
+    students = Contingent.instance.students(@search).select{ |student| student.born_on == @search }
 
     if students.one?
       student = students.first
@@ -19,6 +20,12 @@ class StudentsController < ApplicationController
     else
       render :text => nil
     end
+  end
+
+  private
+
+  def set_search
+    @search = Search.new(params[:search] || params)
   end
 
 end

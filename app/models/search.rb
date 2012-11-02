@@ -3,6 +3,11 @@ class Search < Model
   attribute :patronymic
   attribute :lastname
   attribute :group
-  attribute :include_inactive
-  attribute :person_id
+  attribute :include_inactive,  :type => Boolean
+  attribute :person_id,         :type => Integer
+  attribute :study_id,          :type => Integer
+
+  normalize_attribute :firstname, :patronymic, :lastname, :group, :person_id, :study_id
+
+  alias_attribute :id, :study_id
 end

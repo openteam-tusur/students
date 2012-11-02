@@ -38,6 +38,7 @@ GEM
       gyoku (>= 0.4.0)
       nokogiri (>= 1.4.0)
     arel (3.0.2)
+    attribute_normalizer (1.1.0)
     bond (0.4.2)
     builder (3.0.4)
     capistrano (2.13.5)
@@ -192,6 +193,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_attr
+  attribute_normalizer
   compass-rails
   debugger
   debugger-completion

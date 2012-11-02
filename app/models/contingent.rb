@@ -10,22 +10,21 @@ class Contingent
 
   actions :log_on, :is_login, :get_students_by_criteria, :get_student_by_id, :get_all_active_groups
 
-  def students(params)
-    params ||= {}
-    params.symbolize_keys!
+  def students(search)
     filter = {
-      'GroupName'  => params[:group],
-      'LastName'   => params[:lastname],
-      'FirstName'  => params[:firstname],
-      'MiddleName' => params[:patronymic],
-      'StudyId'    => params[:study_id],
-      'PersonId'   => params[:person_id]
+      'GroupName'  => search.group,
+      'LastName'   => search.lastname,
+      'FirstName'  => search.firstname,
+      'MiddleName' => search.patronymic,
+      'StudyId'    => search.study_id,
+      'PersonId'   => search.person_id
     }
-    filter.delete_if { |key, value| value.try(:strip!); value.blank? }
+    filter.delete_if { |key, value| value.nil? }
     return [] if filter.empty?
 
-    filter['StudentStateId'] = params[:include_inactive].to_i.zero? ? 1 : 0
+    filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
+    p filter
     students_from(Rails.cache.fetch(filter.to_s) do
       call(:get_students_by_criteria, 'studentCriteria' => filter)
     end)
