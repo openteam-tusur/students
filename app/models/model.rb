@@ -6,4 +6,5 @@ class Model
   include ActiveModel::Serialization
   include ActiveModel::Serializers::JSON
   include AttributeNormalizer
+  self.include_root_in_json = false
 end
