@@ -24,7 +24,6 @@ class Contingent
 
     filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
-    p filter
     students_from(Rails.cache.fetch(filter.to_s) do
       call(:get_students_by_criteria, 'studentCriteria' => filter)
     end)
