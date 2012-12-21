@@ -3,6 +3,7 @@ db/*.sqlite3
 log/*
 tmp/*
 bin/*
+config/deploy.yml
 config/settings.yml
 test
 *.css

@@ -6,8 +6,3 @@ contingent:
   auth:
     login:    login
     password: password
-
-deploy:
-  application: appname.ru
-  domain:      user@host
-  port:        port
