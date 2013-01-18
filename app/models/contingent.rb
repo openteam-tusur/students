@@ -24,7 +24,7 @@ class Contingent
 
     filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
-    students_from(Rails.cache.fetch(filter.to_s) do
+    students_from(Rails.cache.fetch(filter.to_s, :expires_in => 1.hour) do
       call(:get_students_by_criteria, 'studentCriteria' => filter)
     end)
   end
