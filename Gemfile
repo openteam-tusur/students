@@ -1,4 +1,4 @@
-source :rubygems
+source 'http://rubygems.org'
 
 group :assets do
   gem 'jquery-rails'
@@ -21,6 +21,7 @@ group :default do
 end
 
 group :development do
+  gem 'brakeman'
   gem 'debugger'
   gem 'debugger-completion'
   gem 'rvm-capistrano'
