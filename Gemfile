@@ -13,7 +13,7 @@ group :default do
   gem 'compass-rails'
   gem 'httpclient'
   gem 'openteam-commons'
-  gem 'rails'
+  gem 'rails',                 '~> 3.2.13'
   gem 'russian'
   gem 'savon'
   gem 'show_for'
