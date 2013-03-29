@@ -3,7 +3,6 @@ source 'http://rubygems.org'
 group :assets do
   gem 'jquery-rails'
   gem 'sass-rails'
-  gem 'therubyracer'
   gem 'uglifier'
 end
 
