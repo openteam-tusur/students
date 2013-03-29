@@ -24,7 +24,8 @@ group :development do
   gem 'brakeman'
   gem 'debugger'
   gem 'debugger-completion'
-  gem 'rvm-capistrano'
+  gem 'capistrano-unicorn',  :git => 'git://github.com/sosedoff/capistrano-unicorn'
+  gem 'openteam-capistrano'
 end
 
 group :production do
