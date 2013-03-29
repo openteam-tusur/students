@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 group :assets do
   gem 'jquery-rails'
   gem 'sass-rails'
+  gem 'turbo-sprockets-rails3'
   gem 'uglifier'
 end
 
