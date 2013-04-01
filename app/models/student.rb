@@ -9,9 +9,9 @@ class Student < Model
   attribute :born_on,         :type => Date
   attribute :learns
   attribute :in_gpo
-  attribute :subfaculty
 
-  delegate :faculty, :faculty=, :to => :subfaculty
+  delegate :subfaculty, :to => :group
+  delegate :faculty, :to => :subfaculty
 
   normalize_attribute :firstname, :patronymic, :lastname, :group
 

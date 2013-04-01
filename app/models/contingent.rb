@@ -30,7 +30,13 @@ class Contingent
   end
 
   def groups
-    auth_call :get_all_active_groups
+    Rails.cache.fetch('get_all_active_groups', :expires_in => 1.day) do
+      call(:get_all_active_groups)[:group_dto]
+    end
+  end
+
+  def find_group_by_number(number)
+    group_from groups.detect{|g| g[:group_name] == number}
   end
 
   private
@@ -48,6 +54,7 @@ class Contingent
     students = students_result.try(:[], :student_dto) || []
     students = [students] if students.is_a?(Hash)
     students.map do |hash|
+      p hash
       Student.new(
         :study_id => hash[:study_id],
         :person_id => hash[:person_id],
@@ -55,10 +62,8 @@ class Contingent
         :patronymic => hash[:middle_name],
         :lastname => hash[:last_name],
         :born_on => hash[:birth_date],
-        :subfaculty => subfaculty_from(hash),
-        :faculty => faculty_from(hash),
         :year => hash[:group][:course],
-        :group => hash[:group][:group_name],
+        :group => group_from(hash[:group], hash[:education]),
         :learns => hash[:student_state][:name] == "Активный",
         :in_gpo => hash[:gpo],
       )
@@ -67,16 +72,36 @@ class Contingent
 
   def subfaculty_from(hash)
     Subfaculty.new(
-      :name => hash[:education][:sub_faculty][:sub_faculty_name],
-      :abbr => hash[:education][:sub_faculty][:short_name],
+      :name => hash[:sub_faculty][:sub_faculty_name],
+      :abbr => hash[:sub_faculty][:short_name],
+      :faculty => faculty_from(hash)
     )
   end
 
   def faculty_from(hash)
     Faculty.new(
-      :name => hash[:education][:faculty][:faculty_name],
-      :abbr => hash[:education][:faculty][:short_name],
+      :name => hash[:faculty][:faculty_name],
+      :abbr => hash[:faculty][:short_name],
     )
   end
 
+  def group_from(hash, education=nil)
+    education ||= hash[:education]
+    Group.new(
+      :number => hash[:group_name],
+      :education_form => education_form_from(education),
+      :speciality_code => education[:speciality][:speciality_code],
+      :subfaculty => subfaculty_from(education),
+    )
+  end
+
+  EDUCATION_FORMS = {
+    'Заочная'       => 'postal',
+    'Очная'         => 'full-time',
+    'Очно-заочная'  => 'part-time',
+  }
+
+  def education_form_from(hash)
+    EDUCATION_FORMS[hash[:edu_form][:edu_form_name]]
+  end
 end

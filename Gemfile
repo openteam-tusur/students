@@ -11,6 +11,7 @@ group :default do
   gem 'active_attr'
   gem 'attribute_normalizer'
   gem 'compass-rails'
+  gem 'grape'
   gem 'httpclient'
   gem 'openteam-commons'
   gem 'rails',                 '~> 3.2.13'
