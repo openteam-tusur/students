@@ -11,6 +11,7 @@ group :default do
   gem 'active_attr'
   gem 'attribute_normalizer'
   gem 'compass-rails'
+  gem 'enumerize'
   gem 'grape'
   gem 'httpclient'
   gem 'openteam-commons'

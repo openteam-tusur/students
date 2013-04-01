@@ -36,7 +36,8 @@ class Contingent
   end
 
   def find_group_by_number(number)
-    group_from groups.detect{|g| g[:group_name] == number}
+    group_hash = groups.detect{|g| g[:group_name] == number}
+    Group.from group_hash.merge group_hash[:education]
   end
 
   private
@@ -50,11 +51,14 @@ class Contingent
     self.send :log_on, Settings['contingent.auth']
   end
 
+  def adapt_education(result)
+
+  end
+
   def students_from(students_result)
     students = students_result.try(:[], :student_dto) || []
     students = [students] if students.is_a?(Hash)
     students.map do |hash|
-      p hash
       Student.new(
         :study_id => hash[:study_id],
         :person_id => hash[:person_id],
@@ -62,46 +66,10 @@ class Contingent
         :patronymic => hash[:middle_name],
         :lastname => hash[:last_name],
         :born_on => hash[:birth_date],
-        :year => hash[:group][:course],
-        :group => group_from(hash[:group], hash[:education]),
+        :education => Education.new(hash[:education].merge(hash[:group])),
         :learns => hash[:student_state][:name] == "Активный",
         :in_gpo => hash[:gpo],
       )
     end
-  end
-
-  def subfaculty_from(hash)
-    Subfaculty.new(
-      :name => hash[:sub_faculty][:sub_faculty_name],
-      :abbr => hash[:sub_faculty][:short_name],
-      :faculty => faculty_from(hash)
-    )
-  end
-
-  def faculty_from(hash)
-    Faculty.new(
-      :name => hash[:faculty][:faculty_name],
-      :abbr => hash[:faculty][:short_name],
-    )
-  end
-
-  def group_from(hash, education=nil)
-    education ||= hash[:education]
-    Group.new(
-      :number => hash[:group_name],
-      :education_form => education_form_from(education),
-      :speciality_code => education[:speciality][:speciality_code],
-      :subfaculty => subfaculty_from(education),
-    )
-  end
-
-  EDUCATION_FORMS = {
-    'Заочная'       => 'postal',
-    'Очная'         => 'full-time',
-    'Очно-заочная'  => 'part-time',
-  }
-
-  def education_form_from(hash)
-    EDUCATION_FORMS[hash[:edu_form][:edu_form_name]]
   end
 end

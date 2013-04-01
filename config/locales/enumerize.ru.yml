@@ -1,0 +1,6 @@
+enumerize:
+  education_form:
+    kind:
+      full-time:  очная
+      part-time:  очно-заочная
+      postal:     заочная

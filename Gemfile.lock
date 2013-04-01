@@ -91,6 +91,8 @@ GEM
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.2.0)
     descendants_tracker (0.0.1)
+    enumerize (0.5.1)
+      activesupport (>= 3.2)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -254,6 +256,7 @@ DEPENDENCIES
   compass-rails
   debugger
   debugger-completion
+  enumerize
   grape
   httpclient
   jquery-rails

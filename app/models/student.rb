@@ -10,8 +10,9 @@ class Student < Model
   attribute :learns
   attribute :in_gpo
 
-  delegate :subfaculty, :to => :group
-  delegate :faculty, :to => :subfaculty
+  attribute :education
+
+  delegate :group, :subfaculty, :faculty, :course, :speciality, :to => :education
 
   normalize_attribute :firstname, :patronymic, :lastname, :group
 

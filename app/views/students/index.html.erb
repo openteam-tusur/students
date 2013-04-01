@@ -11,10 +11,11 @@
         <th>Person ID</th>
         <th>Фамилия, имя, отчество</th>
         <th>Дата рождения</th>
-        <th>Факультет</th>
-        <th>Кафедра</th>
-        <th>Курс</th>
         <th>Группа</th>
+        <th>Курс</th>
+        <th>Кафедра</th>
+        <th>Факультет</th>
+        <th>Специальность</th>
         <th>В ГПО</th>
         <th>Учится</th>
       </tr>
@@ -27,10 +28,11 @@
         <td><%= link_to student.person_id, students_path(:person_id => student.person_id, :include_inactive => 1) %></td>
         <td><%= student.name %></td>
         <td><%= I18n.l student.born_on, :format => "%d.%m.%Y" %></td>
-        <td><abbr title="<%= student.faculty.name %>"><%= student.faculty.abbr %></abbr></td>
-        <td><abbr title="<%= student.subfaculty.name %>"><%= student.subfaculty.abbr %></abbr></td>
-        <td><%= student.year %></td>
         <td><%= student.group %></td>
+        <td><%= student.course %></td>
+        <td><abbr title="<%= student.subfaculty.name %>"><%= student.subfaculty.abbr %></abbr></td>
+        <td><abbr title="<%= student.faculty.name %>"><%= student.faculty.abbr %></abbr></td>
+        <td><abbr title="<%= student.speciality.name %>"><%= student.speciality.code %></abbr></td>
         <td><%= yes_no student.in_gpo %></td>
         <td><%= yes_no student.learns %></td>
       </tr>
