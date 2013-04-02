@@ -1,14 +1,15 @@
+# encoding: utf-8
+
 class Student < Model
   attribute :study_id
   attribute :person_id
   attribute :firstname
   attribute :patronymic
   attribute :lastname
-  attribute :year
-  attribute :group
   attribute :born_on,         :type => Date
   attribute :learns
   attribute :in_gpo
+  attribute :group
 
   attribute :education
 
@@ -22,5 +23,19 @@ class Student < Model
 
   def to_param
     study_id
+  end
+
+  def self.from(hash)
+    Student.new(
+        :study_id => hash[:study_id],
+        :person_id => hash[:person_id],
+        :firstname => hash[:first_name],
+        :patronymic => hash[:middle_name],
+        :lastname => hash[:last_name],
+        :born_on => hash[:birth_date],
+        :education => Education.new(hash[:education].merge(hash[:group])),
+        :learns => hash[:student_state][:name] == "Активный",
+        :in_gpo => hash[:gpo],
+    )
   end
 end

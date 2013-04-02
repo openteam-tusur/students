@@ -24,15 +24,11 @@ class Contingent
 
     filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
-    students_from(Rails.cache.fetch(filter.to_s, :expires_in => 1.hour) do
-      call(:get_students_by_criteria, 'studentCriteria' => filter)
-    end)
+    students_from call(:get_students_by_criteria, 'studentCriteria' => filter, :expires_in => 1.hour)
   end
 
   def groups
-    Rails.cache.fetch('get_all_active_groups', :expires_in => 1.day) do
-      call(:get_all_active_groups)[:group_dto]
-    end
+    call(:get_all_active_groups, :expires_in => 1.day)
   end
 
   def find_group_by_number(number)
@@ -43,33 +39,26 @@ class Contingent
   private
 
   def call(method, options={})
-    login
-    self.send(method, options)[:"#{method}_response"][:"#{method}_result"]
+    expires_in = options.delete(:expires_in) || 1.minute
+    Rails.cache.fetch("#{method}-#{options}", :expires_in => 1.day) do
+      login
+      result = self.send(method, options)[:"#{method}_response"][:"#{method}_result"]
+      dto?(result) ? result.values.first : result
+    end
+  end
+
+  def dto?(result)
+    result.is_a?(Hash) && result.one? && result.keys.first =~ /_dto$/
   end
 
   def login
     self.send :log_on, Settings['contingent.auth']
   end
 
-  def adapt_education(result)
-
-  end
-
-  def students_from(students_result)
-    students = students_result.try(:[], :student_dto) || []
+  def students_from(students)
     students = [students] if students.is_a?(Hash)
     students.map do |hash|
-      Student.new(
-        :study_id => hash[:study_id],
-        :person_id => hash[:person_id],
-        :firstname => hash[:first_name],
-        :patronymic => hash[:middle_name],
-        :lastname => hash[:last_name],
-        :born_on => hash[:birth_date],
-        :education => Education.new(hash[:education].merge(hash[:group])),
-        :learns => hash[:student_state][:name] == "Активный",
-        :in_gpo => hash[:gpo],
-      )
+      Student.from(hash)
     end
   end
 end
