@@ -6,6 +6,7 @@ class Search < Model
   attribute :include_inactive,  :type => Boolean
   attribute :person_id,         :type => Integer
   attribute :study_id,          :type => Integer
+  attribute :born_on,           :type => Date
 
   normalize_attribute :firstname, :patronymic, :lastname, :group, :person_id, :study_id
 

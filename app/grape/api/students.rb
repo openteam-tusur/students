@@ -30,6 +30,20 @@ class API::Students < Grape::API
     end
   end
 
+  namespace :students do
+    helpers do
+      def search
+        @search ||= Search.new(params)
+      end
+
+      def finded_students
+        @finded_students ||= Contingent.instance.students(search)
+      end
+    end
+
+    get  { finded_students }
+  end
+
   desc 'Redirect to work_plan'
   namespace :work_plans do
     params do

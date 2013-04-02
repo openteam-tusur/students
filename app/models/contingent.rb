@@ -19,27 +19,26 @@ class Contingent
       'StudyId'    => search.study_id,
       'PersonId'   => search.person_id
     }
-    filter.delete_if { |key, value| value.nil? }
+    filter.delete_if { |key, value| value.blank? }
     return [] if filter.empty?
 
     filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
-    students_from call(:get_students_by_criteria, 'studentCriteria' => filter, :expires_in => 1.hour)
+    students = students_from(call(:get_students_by_criteria, 'studentCriteria' => filter))
+    search.born_on ? students.select{|student| student.born_on == search.born_on} : students
   end
 
   def groups
-    call(:get_all_active_groups, :expires_in => 1.day)
+    call(:get_all_active_groups)
   end
 
-  def find_group_by_number(number)
-    group_hash = groups.detect{|g| g[:group_name] == number}
-    Group.from group_hash.merge group_hash[:education]
+  def find_student_by_study_id(study_id)
+    Student.from call(:get_student_by_id, 'studentId' => study_id)
   end
 
   private
 
   def call(method, options={})
-    expires_in = options.delete(:expires_in) || 1.minute
     Rails.cache.fetch("#{method}-#{options}", :expires_in => 1.day) do
       login
       result = self.send(method, options)[:"#{method}_response"][:"#{method}_result"]
@@ -56,6 +55,7 @@ class Contingent
   end
 
   def students_from(students)
+    students ||= []
     students = [students] if students.is_a?(Hash)
     students.map do |hash|
       Student.from(hash)

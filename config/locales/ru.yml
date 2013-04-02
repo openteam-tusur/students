@@ -8,7 +8,7 @@ ru:
     search:   Поиск студента
 
     attributes:
-      search: &search
+      search:              &search
         firstname:         Имя
         group:             Группа
         lastname:          Фамилия
@@ -17,25 +17,27 @@ ru:
         include_inactive:  Показать тех, кто не учится
 
       student:
-        <<: *search
-        born_on:     Дата рождения
-        faculty:     Факультет
-        in_gpo:      В ГПО?
-        learns:      Учится?
-        study_id:    ID
-        subfaculty:  Кафедра
-        year:        Курс
+        <<:                *search
+        born_on:           Дата рождения
+        faculty:           Факультет
+        in_gpo:            В ГПО?
+        learns:            Учится?
+        study_id:          ID
+        subfaculty:        Кафедра
+        speciality:        Специальность
+        education_form:    Форма обучения
+        course:            Курс
 
   enumerize:
     search:
-      learns: &yes_no
-        "yes": да
-        "no": нет
+      learns:              &yes_no
+        "yes":             да
+        "no":              нет
     student:
       learns:
-        <<: *yes_no
+        <<:                *yes_no
       in_gpo:
-        <<: *yes_no
+        <<:                *yes_no
 
 
 
