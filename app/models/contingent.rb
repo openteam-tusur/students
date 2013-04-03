@@ -6,9 +6,13 @@ class Contingent
   extend Savon::Model
   include Singleton
 
-  document Settings['contingent.wsdl']
+  client :wsdl => Settings['contingent.wsdl']
 
-  actions :log_on, :is_login, :get_students_by_criteria, :get_student_by_id, :get_all_active_groups
+  global :soap_version, 2
+  global :logger, Rails.logger
+  global :log_level, :info
+
+  operations :log_on, :is_login, :get_students_by_criteria, :get_student_by_id, :get_all_active_groups
 
   def students(search)
     filter = {
@@ -24,34 +28,31 @@ class Contingent
 
     filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
-    students = students_from(call(:get_students_by_criteria, 'studentCriteria' => filter))
+    students = students_from(cached_call(:get_students_by_criteria, 'studentCriteria' => filter))
     search.born_on ? students.select{|student| student.born_on == search.born_on} : students
   end
 
   def groups
-    call(:get_all_active_groups)
+    cached_call(:get_all_active_groups)
   end
 
   def find_student_by_study_id(study_id)
-    Student.from call(:get_student_by_id, 'studentId' => study_id)
+    Student.from cached_call(:get_student_by_id, 'studentId' => study_id)
   end
 
   private
 
-  def call(method, options={})
+  def cached_call(method, options={})
     Rails.cache.fetch("#{method}-#{options}", :expires_in => 1.day) do
-      login
-      result = self.send(method, options)[:"#{method}_response"][:"#{method}_result"]
+      cookies = log_on(:message => Settings['contingent.auth']).http.cookies
+      response = self.send(method, :message => options, :cookies => cookies)
+      result = response.body[:"#{method}_response"][:"#{method}_result"]
       dto?(result) ? result.values.first : result
     end
   end
 
   def dto?(result)
     result.is_a?(Hash) && result.one? && result.keys.first =~ /_dto$/
-  end
-
-  def login
-    self.send :log_on, Settings['contingent.auth']
   end
 
   def students_from(students)
