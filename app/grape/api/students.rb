@@ -21,12 +21,8 @@ class API::Students < Grape::API
   end
 
   namespace :groups do
-    params do
-      requires :group_number, :type => String, :desc => "number of group"
-    end
-
-    get ":group_number" do
-      Contingent.instance.find_group_by_number(params[:group_number])
+    get "/" do
+      Contingent.instance.groups
     end
   end
 
@@ -42,16 +38,6 @@ class API::Students < Grape::API
     end
 
     get  { finded_students }
-  end
-
-  desc 'Redirect to work_plan'
-  namespace :work_plans do
-    params do
-      requires :subspeciality_id, :type => Integer, :desc => "id of subspeciality"
-    end
-    get ":subspeciality_id" do
-      redirect subspeciality.work_plan.try :file_url
-    end
   end
 end
 
