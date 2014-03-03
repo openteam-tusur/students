@@ -15,7 +15,7 @@ group :default do
   gem 'grape'
   gem 'httpclient'
   gem 'openteam-commons'
-  gem 'rails',                 '~> 3.2.13'
+  gem 'rails', '~> 3.2.13'
   gem 'russian'
   gem 'savon'
   gem 'show_for'
