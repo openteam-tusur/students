@@ -10,6 +10,7 @@ class Student < Model
   attribute :learns
   attribute :in_gpo
   attribute :group
+  attribute :zach_number
 
   attribute :education
 
@@ -36,6 +37,7 @@ class Student < Model
         :education => Education.new(hash[:education].merge(hash[:group])),
         :learns => hash[:student_state][:name] == "Активный",
         :in_gpo => hash[:gpo],
+        :zach_number => hash[:zach_number],
     )
   end
 end

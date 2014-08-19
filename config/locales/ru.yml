@@ -27,6 +27,7 @@ ru:
         speciality:        Специальность
         education_form:    Форма обучения
         course:            Курс
+        zach_number:       Номер зачетной книжки
 
   enumerize:
     search:

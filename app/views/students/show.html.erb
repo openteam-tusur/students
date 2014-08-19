@@ -5,6 +5,7 @@
   <%= student.association :faculty %>
   <%= student.association :subfaculty %>
   <%= student.association :speciality %>
+  <%= student.attributes :zach_number %>
   <%= student.attributes :course, :group %>
   <%= student.attributes :learns, :in_gpo %>
 <% end %>

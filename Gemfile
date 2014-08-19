@@ -24,8 +24,6 @@ end
 
 group :development do
   gem 'brakeman'
-  gem 'debugger'
-  gem 'debugger-completion'
   gem 'capistrano-unicorn'
   gem 'openteam-capistrano'
 end
