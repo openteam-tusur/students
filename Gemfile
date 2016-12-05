@@ -14,7 +14,7 @@ group :default do
   gem 'enumerize'
   gem 'grape'
   gem 'httpclient'
-  gem 'openteam-commons'
+  gem 'openteam-commons', '~> 0.3.3'
   gem 'rails', '~> 3.2.13'
   gem 'russian'
   gem 'savon'
@@ -24,8 +24,7 @@ end
 
 group :development do
   gem 'brakeman'
-  gem 'capistrano-unicorn'
-  gem 'openteam-capistrano'
+  gem 'openteam-capistrano', '~> 1.0.16'
 end
 
 group :production do
