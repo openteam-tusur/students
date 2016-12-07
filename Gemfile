@@ -10,6 +10,7 @@ end
 group :default do
   gem 'active_attr'
   gem 'attribute_normalizer'
+  gem 'awesome_print'
   gem 'compass-rails'
   gem 'enumerize'
   gem 'grape'

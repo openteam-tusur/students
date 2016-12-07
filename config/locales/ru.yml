@@ -28,6 +28,7 @@ ru:
         education_form:    Форма обучения
         course:            Курс
         zach_number:       Номер зачетной книжки
+        financing:         Бюджет/ПВЗ
 
   enumerize:
     search:

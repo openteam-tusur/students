@@ -6,15 +6,16 @@ class Student < Model
   attribute :firstname
   attribute :patronymic
   attribute :lastname
-  attribute :born_on,         :type => Date
+  attribute :born_on, type: Date
   attribute :learns
   attribute :in_gpo
   attribute :group
   attribute :zach_number
+  attribute :financing
 
   attribute :education
 
-  delegate :group, :subfaculty, :faculty, :course, :speciality, :to => :education
+  delegate :group, :subfaculty, :faculty, :course, :speciality, to: :education
 
   normalize_attribute :firstname, :patronymic, :lastname, :group
 
@@ -28,16 +29,17 @@ class Student < Model
 
   def self.from(hash)
     Student.new(
-        :study_id => hash[:study_id],
-        :person_id => hash[:person_id],
-        :firstname => hash[:first_name],
-        :patronymic => hash[:middle_name],
-        :lastname => hash[:last_name],
-        :born_on => hash[:birth_date],
-        :education => Education.new(hash[:education].merge(hash[:group])),
-        :learns => hash[:student_state][:name] == "Активный",
-        :in_gpo => hash[:gpo],
-        :zach_number => hash[:zach_number],
+      study_id: hash[:study_id],
+      person_id: hash[:person_id],
+      firstname: hash[:first_name],
+      patronymic: hash[:middle_name],
+      lastname: hash[:last_name],
+      born_on: hash[:birth_date],
+      education: Education.new(hash[:education].merge(hash[:group])),
+      learns: hash[:student_state][:name] == "Активный",
+      in_gpo: hash[:gpo],
+      zach_number: hash[:zach_number],
+      financing: hash[:financing]
     )
   end
 end

@@ -1,9 +1,9 @@
 <h1>Список студентов</h1>
 
-<%= render "form" %>
+<%= render 'form' %>
 
 <% if students.any? %>
-  <table class="tablesorter">
+  <table class='tablesorter'>
     <thead>
       <tr>
         <th>№</th>
@@ -18,6 +18,7 @@
         <th>Специальность</th>
         <th>В ГПО</th>
         <th>Учится</th>
+        <th>Бюджет/ПВЗ</th>
       </tr>
     </thead>
     <tbody>
@@ -25,7 +26,7 @@
       <tr>
         <td><%= index + 1 %></td>
         <td><%= link_to student.study_id, student_path(student.study_id) %></td>
-        <td><%= link_to student.person_id, students_path(:search => {:person_id => student.person_id, :include_inactive => 1}) %></td>
+        <td><%= link_to student.person_id, students_path(search: { person_id: student.person_id, include_inactive: 1 }) %></td>
         <td><%= student.name %></td>
         <td><%= I18n.l student.born_on %></td>
         <td><%= student.group %></td>
@@ -35,6 +36,7 @@
         <td><abbr title="<%= student.speciality.name %>"><%= student.speciality.code %></abbr></td>
         <td><%= yes_no student.in_gpo %></td>
         <td><%= yes_no student.learns %></td>
+        <td><%= student.financing %></td>
       </tr>
     <% end %>
     </tbody>

@@ -41,6 +41,7 @@ GEM
       nokogiri
     arel (3.0.3)
     attribute_normalizer (1.1.0)
+    awesome_print (1.7.0)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -276,6 +277,7 @@ PLATFORMS
 DEPENDENCIES
   active_attr
   attribute_normalizer
+  awesome_print
   brakeman
   compass-rails
   enumerize
