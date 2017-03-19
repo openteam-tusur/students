@@ -24,6 +24,7 @@ group :default do
 end
 
 group :development do
+  gem 'capistrano-db-tasks', '0.4', require: false
   gem 'brakeman'
   gem 'openteam-capistrano', '~> 1.0.16'
 end
