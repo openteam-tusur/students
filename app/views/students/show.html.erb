@@ -7,7 +7,7 @@
   <%= student.association :speciality %>
   <%= student.attributes :zach_number %>
   <%= student.attributes :course, :group %>
-  <%= student.attributes :learns, :activate_date %>
+  <%= student.attributes :learns, :activate_date, :student_state %>
   <%= student.attributes :in_gpo, :financing %>
 <% end %>
 <p><%= link_to 'Вернуться', :back, :class => "button" %></p>

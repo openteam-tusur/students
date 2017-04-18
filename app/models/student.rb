@@ -13,6 +13,7 @@ class Student < Model
   attribute :zach_number
   attribute :financing
   attribute :activate_date
+  attribute :student_state
 
   attribute :education
 
@@ -41,6 +42,7 @@ class Student < Model
       in_gpo: hash[:gpo],
       zach_number: hash[:zach_number],
       activate_date: hash[:activate_date],
+      student_state: hash[:student_state][:name],
       financing: hash[:financing]
     )
   end
