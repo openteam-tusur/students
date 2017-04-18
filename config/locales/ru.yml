@@ -22,6 +22,7 @@ ru:
         faculty:           Факультет
         in_gpo:            В ГПО?
         learns:            Учится?
+        activate_date:     Дата последней активности
         study_id:          ID
         subfaculty:        Кафедра
         speciality:        Специальность

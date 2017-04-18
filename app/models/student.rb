@@ -12,6 +12,7 @@ class Student < Model
   attribute :group
   attribute :zach_number
   attribute :financing
+  attribute :activate_date
 
   attribute :education
 
@@ -39,6 +40,7 @@ class Student < Model
       learns: hash[:student_state][:name] == "Активный",
       in_gpo: hash[:gpo],
       zach_number: hash[:zach_number],
+      activate_date: hash[:activate_date],
       financing: hash[:financing]
     )
   end
