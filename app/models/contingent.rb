@@ -6,7 +6,7 @@ class Contingent
   extend Savon::Model
   include Singleton
 
-  client :wsdl => Settings['contingent.wsdl']
+  client wsdl: Settings['contingent.wsdl']
 
   global :soap_version, 2
   global :logger, Rails.logger
@@ -21,7 +21,8 @@ class Contingent
       'FirstName'  => search.firstname,
       'MiddleName' => search.patronymic,
       'StudyId'    => search.study_id,
-      'PersonId'   => search.person_id
+      'PersonId'   => search.person_id,
+      'PreviousPersonId' => search.previous_person_id
     }
     filter.delete_if { |key, value| value.blank? }
     return [] if filter.empty?
@@ -43,9 +44,9 @@ class Contingent
   private
 
   def cached_call(method, options={})
-    Rails.cache.fetch("#{method}-#{options}", :expires_in => 1.day) do
-      cookies = log_on(:message => Settings['contingent.auth']).http.cookies
-      response = self.send(method, :message => options, :cookies => cookies)
+    Rails.cache.fetch("#{method}-#{options}", expires_in: 1.day) do
+      cookies = log_on(message: Settings['contingent.auth']).http.cookies
+      response = self.send(method, message: options, cookies: cookies)
       result = response.body[:"#{method}_response"][:"#{method}_result"]
       dto?(result) ? result.values.first : result
     end

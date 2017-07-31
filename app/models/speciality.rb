@@ -4,8 +4,8 @@ class Speciality < Model
 
   def self.from(hash)
     Speciality.new(
-      :code => hash[:speciality_code],
-      :name => hash[:speciality_name],
+      code: hash[:speciality_code],
+      name: hash[:speciality_name],
     )
   end
 end

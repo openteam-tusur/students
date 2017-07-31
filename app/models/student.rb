@@ -3,6 +3,7 @@
 class Student < Model
   attribute :study_id
   attribute :person_id
+  attribute :previous_person_id
   attribute :firstname
   attribute :patronymic
   attribute :lastname
@@ -33,12 +34,13 @@ class Student < Model
     Student.new(
       study_id: hash[:study_id],
       person_id: hash[:person_id],
+      previous_person_id: hash[:previous_person_id],
       firstname: hash[:first_name],
       patronymic: hash[:middle_name],
       lastname: hash[:last_name],
       born_on: hash[:birth_date],
       education: Education.new(hash[:education].merge(hash[:group])),
-      learns: hash[:student_state][:name] == "Активный",
+      learns: hash[:student_state][:name] == 'Активный',
       in_gpo: hash[:gpo],
       zach_number: hash[:zach_number],
       activate_date: hash[:activate_date],

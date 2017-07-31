@@ -5,8 +5,8 @@ class Subfaculty < Model
 
   def self.from(hash)
     Subfaculty.new(
-      :name => hash[:sub_faculty_name],
-      :abbr => hash[:short_name],
+      name: hash[:sub_faculty_name],
+      abbr: hash[:short_name],
     )
   end
 end

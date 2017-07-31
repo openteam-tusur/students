@@ -1,6 +1,6 @@
 <h1>Студент</h1>
 <%= show_for student do | student | %>
-  <%= student.attributes :study_id, :person_id %>
+  <%= student.attributes :study_id, :person_id, :previous_person_id %>
   <%= student.attributes :name, :born_on %>
   <%= student.association :faculty %>
   <%= student.association :subfaculty %>
@@ -10,5 +10,5 @@
   <%= student.attributes :learns, :activate_date, :student_state %>
   <%= student.attributes :in_gpo, :financing %>
 <% end %>
-<p><%= link_to 'Вернуться', :back, :class => "button" %></p>
+<p><%= link_to 'Вернуться', :back, class: "button" %></p>
 

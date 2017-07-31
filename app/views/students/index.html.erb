@@ -9,6 +9,7 @@
         <th>№</th>
         <th>ID</th>
         <th>Person ID</th>
+        <th>Prev Person ID</th>
         <th>Фамилия, имя, отчество</th>
         <th>Дата рождения</th>
         <th>Группа</th>
@@ -27,6 +28,7 @@
         <td><%= index + 1 %></td>
         <td><%= link_to student.study_id, student_path(student.study_id) %></td>
         <td><%= link_to student.person_id, students_path(search: { person_id: student.person_id, include_inactive: 1 }) %></td>
+        <td><%= student.previous_person_id %></td>
         <td><%= student.name %></td>
         <td><%= I18n.l student.born_on %></td>
         <td><%= student.group %></td>

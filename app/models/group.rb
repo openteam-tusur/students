@@ -6,7 +6,7 @@ class Group < Model
   attribute :subfaculty
   attribute :speciality
 
-  delegate :faculty, :faculty=, :to => :subfaculty
+  delegate :faculty, :faculty=, to: :subfaculty
 
   def to_s
     number
@@ -14,13 +14,13 @@ class Group < Model
 
   def self.from(hash)
     Group.new(
-      :number => hash[:group_name],
-      :course => hash[:course],
-      :year_forming => hash[:year_forming],
-      :education_form => EducationForm.from(hash[:edu_form]),
-      :subfaculty => Subfaculty.from(hash[:sub_faculty]),
-      :faculty => Faculty.from(hash[:faculty]),
-      :speciality => Speciality.from(hash[:speciality]),
+      number: hash[:group_name],
+      course: hash[:course],
+      year_forming: hash[:year_forming],
+      education_form: EducationForm.from(hash[:edu_form]),
+      subfaculty: Subfaculty.from(hash[:sub_faculty]),
+      faculty: Faculty.from(hash[:faculty]),
+      speciality: Speciality.from(hash[:speciality]),
     )
   end
 end

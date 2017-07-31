@@ -4,8 +4,8 @@ class Faculty < Model
 
   def self.from(hash)
     Faculty.new(
-      :name => hash[:faculty_name],
-      :abbr => hash[:short_name],
+      name: hash[:faculty_name],
+      abbr: hash[:short_name],
     )
   end
 

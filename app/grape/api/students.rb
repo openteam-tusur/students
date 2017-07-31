@@ -1,5 +1,5 @@
 class API::Students < Grape::API
-  version 'v1', :using => :path
+  version 'v1', using: :path
 
   logger Rails.logger
 

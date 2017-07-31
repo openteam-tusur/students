@@ -1,12 +1,13 @@
-<%= simple_form_for search, :url => '', :html => { :method => :get } do | form | %>
-  <%= form.input :lastname, :input_html => { :class => "focus_first" } %>
+<%= simple_form_for search, url: '', html: { method: :get } do | form | %>
+  <%= form.input :lastname, input_html: { class: "focus_first" } %>
   <%= form.input :firstname %>
   <%= form.input :patronymic %>
   <%= form.input :group %>
   <%= form.input :person_id %>
-  <%= form.input :include_inactive, :as => :boolean %>
+  <%= form.input :previous_person_id %>
+  <%= form.input :include_inactive, as: :boolean %>
 
-  <%= form.button :submit, 'Искать', :class => "button", :name => nil %>
-  <%= link_to "Очистить", root_path, :class => "button" %>
+  <%= form.button :submit, 'Искать', class: 'button', name: nil %>
+  <%= link_to 'Очистить', root_path, class: 'button' %>
 <% end %>
 
