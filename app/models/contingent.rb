@@ -30,6 +30,11 @@ class Contingent
     filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
     students = students_from(cached_call(:get_students_by_criteria, 'studentCriteria' => filter))
+    if filter['GroupName'].present? && !filter['GroupName'].match(/_$/)
+      filter['GroupName'] = %(#{filter['GroupName']}_)
+      students += students_from(cached_call(:get_students_by_criteria, 'studentCriteria' => filter))
+    end
+
     search.born_on ? students.select{|student| student.born_on == search.born_on} : students
   end
 

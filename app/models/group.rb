@@ -14,7 +14,7 @@ class Group < Model
 
   def self.from(hash)
     Group.new(
-      number: hash[:group_name],
+      number: hash[:group_name].gsub(/_$/, ''),
       course: hash[:course],
       year_forming: hash[:year_forming],
       education_form: EducationForm.from(hash[:edu_form]),
