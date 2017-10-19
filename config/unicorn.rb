@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# Sample rails 3 config
+# Sample rails config
 # ------------------------------------------------------------------------------
 
 # Set your full path to application.
@@ -8,13 +8,13 @@ app_dir = File.expand_path('../../', __FILE__)
 # Set unicorn options
 worker_processes 2
 preload_app true
-timeout 180
+timeout 360
 
 # Fill path to your app
 working_directory app_dir
 
 # Set up socket location
-listen "#{app_dir}/tmp/sockets/unicorn.sock", :backlog => 64
+listen "#{app_dir}/tmp/sockets/unicorn.sock", backlog: 64
 
 # Loging
 stderr_path "#{app_dir}/log/unicorn.stderr.log"
@@ -24,9 +24,9 @@ stdout_path "#{app_dir}/log/unicorn.stdout.log"
 pid "#{app_dir}/tmp/pids/unicorn.pid"
 
 before_fork do |server, worker|
-  defined?(ActiveRecord::Base) and ActiveRecord::Base.connection.disconnect!
+  defined?(ActiveRecord::Base) && ActiveRecord::Base.connection.disconnect!
   old_pid = "#{server.config[:pid]}.oldbin"
-  if File.exists?(old_pid) && server.pid != old_pid
+  if File.exist?(old_pid) && server.pid != old_pid
     begin
       sig = (worker.nr + 1) >= server.worker_processes ? :QUIT : :TTOU
       Process.kill(sig, File.read(old_pid).to_i)
@@ -36,10 +36,10 @@ before_fork do |server, worker|
   end
 end
 
-after_fork do |server, worker|
-  defined?(ActiveRecord::Base) and ActiveRecord::Base.establish_connection
+after_fork do |_server, _worker|
+  defined?(ActiveRecord::Base) && ActiveRecord::Base.establish_connection
 end
 
-before_exec do |server|
+before_exec do |_server|
   ENV['BUNDLE_GEMFILE'] = "#{app_dir}/Gemfile"
 end

@@ -1,8 +1,6 @@
 require 'openteam/capistrano/deploy'
 
-set :bundle_binstubs, -> { shared_path.join('bin') }
-
-set :db_remote_clean, true
+# append :linked_dirs, 'data'
 
 set :slackistrano,
   channel: (Settings['slack.channel'] rescue ''),
