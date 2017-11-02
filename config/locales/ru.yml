@@ -20,6 +20,7 @@ ru:
         <<:                *search
         born_on:           Дата рождения
         faculty:           Факультет
+        gender:            Пол
         in_gpo:            В ГПО?
         learns:            Учится?
         activate_date:     Дата последней активности
@@ -28,7 +29,10 @@ ru:
         subfaculty:        Кафедра
         speciality:        Специальность
         education_form:    Форма обучения
+        citizenship:       Гражданство
         course:            Курс
+        begin_study:       Начало обучения
+        end_study:         Окончание обучения
         zach_number:       Номер зачетной книжки
         financing:         Бюджет/ПВЗ
 
