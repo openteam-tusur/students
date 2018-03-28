@@ -34,6 +34,10 @@ class Student < Model
     study_id
   end
 
+  def hostel_data
+    Contingent.instance.student_hostels(self)
+  end
+
   def self.from(hash)
     Student.new(
       study_id: hash[:study_id],

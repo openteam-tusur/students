@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 require 'singleton'
 
 class Contingent
@@ -12,7 +11,15 @@ class Contingent
   global :logger, Rails.logger
   global :log_level, :info
 
-  operations :log_on, :is_login, :get_students_by_criteria, :get_student_by_id, :get_all_active_groups
+  OPERATIONS = %i[
+    log_on
+    is_login
+    get_students_by_criteria
+    get_student_by_id
+    get_all_active_groups
+    get_student_hostels
+  ]
+  operations(*OPERATIONS)
 
   def students(search)
     filter = {
@@ -35,7 +42,9 @@ class Contingent
       students += students_from(cached_call(:get_students_by_criteria, 'studentCriteria' => filter))
     end
 
-    search.born_on ? students.select{|student| student.born_on == search.born_on} : students
+    return students if !search.born_on
+
+    students.select{|student| student.born_on == search.born_on}
   end
 
   def groups
@@ -46,10 +55,16 @@ class Contingent
     Student.from cached_call(:get_student_by_id, 'studentId' => study_id)
   end
 
+  def student_hostels(student)
+    response = cached_call(:get_student_hostels, 'studyId' => student.study_id)
+    HostelLiving.from_array(response || [])
+  end
+
   private
 
   def cached_call(method, options={})
-    Rails.cache.fetch("#{method}-#{options}", expires_in: 1.day) do
+    expire_time = Rails.env.production?  ? 1.day : 1.second
+    Rails.cache.fetch("#{method}-#{options}", expires_in: expire_time) do
       cookies = log_on(message: Settings['contingent.auth']).http.cookies
       response = self.send(method, message: options, cookies: cookies)
       result = response.body[:"#{method}_response"][:"#{method}_result"]
@@ -64,8 +79,6 @@ class Contingent
   def students_from(students)
     students ||= []
     students = [students] if students.is_a?(Hash)
-    students.map do |hash|
-      Student.from(hash)
-    end
+    students.map { |hash| Student.from(hash) }
   end
 end

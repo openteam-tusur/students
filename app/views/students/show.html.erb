@@ -15,5 +15,16 @@
   <%= student.attributes :zach_number %>
   <%= student.attributes :in_gpo, :financing %>
 <% end %>
-<p><%= link_to 'Вернуться', :back, class: "button" %></p>
 
+<% if student.hostel_data.any? %>
+  <h4>Общежития</h4>
+  <% student.hostel_data.each do |hostel_living| %>
+    <p><strong>Общежитие:</strong> <%= hostel_living.hostel[:name] %></p>
+    <p><strong>Комната:</strong> <%= hostel_living.room_number %></p>
+    <p><strong>Начало:</strong> <%= hostel_living.start_date %></p>
+    <p><strong>Окончание:</strong> <%= hostel_living.end_date %></p>
+    <hr>
+  <% end %>
+<% end %>
+
+<p><%= link_to 'Вернуться', :back, class: "button" %></p>

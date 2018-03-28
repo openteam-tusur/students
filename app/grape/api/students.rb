@@ -20,6 +20,12 @@ class API::Students < Grape::API
     :pong
   end
 
+  get '/student/:id' do
+    student = Contingent.instance.find_student_by_study_id(params[:id])
+    student.attributes.merge(hostel_data: student.hostel_data)
+  end
+
+
   namespace :groups do
     get "/" do
       Contingent.instance.groups
@@ -38,6 +44,8 @@ class API::Students < Grape::API
     end
 
     get  { finded_students }
-  end
-end
 
+  end
+
+
+end
