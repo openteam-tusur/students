@@ -23,7 +23,7 @@ class HostelLiving < Model
     end
 
     def from_array(array_of_hashes)
-      array_of_hashes.map{ |hash| from(hash) }.compact
+      (array_of_hashes.kind_of?(Array) ? array_of_hashes : [array_of_hashes]).map{ |hash| from(hash) }.compact
     end
   end
 end
