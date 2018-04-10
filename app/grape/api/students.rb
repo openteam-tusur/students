@@ -25,7 +25,6 @@ class API::Students < Grape::API
     student.attributes.merge(hostel_data: student.hostel_data)
   end
 
-
   namespace :groups do
     get "/" do
       Contingent.instance.groups
@@ -43,9 +42,12 @@ class API::Students < Grape::API
       end
     end
 
-    get  { finded_students }
+    get '/' do
+      finded_students
+    end
 
+    get 'by_subfaculty' do
+      Contingent.instance.students_by_subfaculty(params[:subfaculty_id])
+    end
   end
-
-
 end

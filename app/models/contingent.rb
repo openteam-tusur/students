@@ -18,6 +18,7 @@ class Contingent
     get_student_by_id
     get_all_active_groups
     get_student_hostels
+    get_students_by_subfac_common_id
   ]
   operations(*OPERATIONS)
 
@@ -58,6 +59,11 @@ class Contingent
   def student_hostels(student)
     response = cached_call(:get_student_hostels, 'studyId' => student.study_id)
     HostelLiving.from_array(response || [])
+  end
+
+  def students_by_subfaculty(common_id)
+    response = cached_call(:get_students_by_subfac_common_id, 'SubfacCommonId' => common_id)
+    SubfacultyStudent.from_array(response || [])
   end
 
   private
