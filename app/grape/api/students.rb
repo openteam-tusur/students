@@ -40,6 +40,16 @@ class API::Students < Grape::API
       def finded_students
         @finded_students ||= Contingent.instance.students(search)
       end
+
+      def by_subfaculty
+        students = Contingent.instance.students_by_subfaculty(params[:subfaculty_id])
+
+        if params[:status]
+          students = students.select { |student| params[:status].include? student.status }
+        end
+
+        students
+      end
     end
 
     get '/' do
@@ -47,7 +57,7 @@ class API::Students < Grape::API
     end
 
     get 'by_subfaculty' do
-      Contingent.instance.students_by_subfaculty(params[:subfaculty_id])
+      by_subfaculty
     end
   end
 end
