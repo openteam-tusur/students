@@ -21,6 +21,7 @@ group :default do
   gem 'savon'
   gem 'show_for'
   gem 'simple_form'
+  gem 'rest-client'
 end
 
 group :development do

@@ -24,20 +24,22 @@ class Contingent
 
   def students(search)
     filter = {
-      'GroupName'  => search.group,
-      'LastName'   => search.lastname,
-      'FirstName'  => search.firstname,
-      'MiddleName' => search.patronymic,
-      'StudyId'    => search.study_id,
-      'PersonId'   => search.person_id,
+      'GroupName'        => search.group,
+      'LastName'         => search.lastname,
+      'FirstName'        => search.firstname,
+      'MiddleName'       => search.patronymic,
+      'StudyId'          => search.study_id,
+      'PersonId'         => search.person_id,
       'PreviousPersonId' => search.previous_person_id
     }
+
     filter.delete_if { |key, value| value.blank? }
     return [] if filter.empty?
 
     filter['StudentStateId'] = search.include_inactive? ? 0 : 1
 
     students = students_from(cached_call(:get_students_by_criteria, 'studentCriteria' => filter))
+
     if filter['GroupName'].present? && !filter['GroupName'].match(/_$/)
       filter['GroupName'] = %(#{filter['GroupName']}_)
       students += students_from(cached_call(:get_students_by_criteria, 'studentCriteria' => filter))
@@ -45,7 +47,7 @@ class Contingent
 
     return students if !search.born_on
 
-    students.select{|student| student.born_on == search.born_on}
+    students.select { |student| student.born_on == search.born_on }
   end
 
   def groups
