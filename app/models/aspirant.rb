@@ -42,7 +42,8 @@ class Aspirant
       citizenship: item['Citizenship']['Name'],
       firstname: item['FirstName'],
       lastname: item['LastName'],
-      patronymic: item['MiddleName']
+      patronymic: item['MiddleName'],
+      learns: true
     }
   end
 end
