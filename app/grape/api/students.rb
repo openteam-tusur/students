@@ -27,7 +27,12 @@ class API::Students < Grape::API
 
   namespace :groups do
     get "/" do
-      Contingent.instance.groups
+      groups = Contingent.instance.groups
+      groups = groups.select { |group|
+        group[:group_name] == params[:number]
+      } if params[:number].present?
+
+      groups
     end
   end
 
