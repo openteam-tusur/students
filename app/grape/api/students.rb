@@ -27,7 +27,13 @@ class API::Students < Grape::API
 
   namespace :groups do
     get "/" do
-      groups = Contingent.instance.groups
+      if params[:aspirant]
+        groups = Aspirant.collection(params.merge({
+          op: 'GetAllActiveGraduateGroups'
+        }))
+      else
+        groups = Contingent.instance.groups
+      end
       groups = groups.select { |group|
         group[:group_name] == params[:number]
       } if params[:number].present?

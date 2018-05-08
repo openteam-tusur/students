@@ -1,5 +1,9 @@
 class Aspirant
   def self.collection(params)
+    params = {
+      'op' => 'GetGraduatesByCriteria'
+    }.merge(search_params(params))
+
     @response = RestClient::Request.execute(
       method: :get,
       url: Settings['aspirants.url'],
@@ -7,9 +11,7 @@ class Aspirant
       password: Settings['aspirants.pass'],
       timeout: 120.seconds,
       headers: {
-        params: {
-          'op' => 'GetGraduatesByCriteria'
-        }.merge(search_params(params))
+        params: params
       }
     ) do |response, _request, _result|
       json = begin
@@ -18,8 +20,18 @@ class Aspirant
                []
              end
 
-      json.select { |item| item.try(:[], 'Status').try(:[], 'DictionaryId') == '10' }
-          .map { |item| transform_to_contingent_responce(item) }
+      case params['op']
+      when 'GetGraduatesByCriteria'
+        json.select { |item|
+          item.try(:[], 'Status').try(:[], 'DictionaryId') == '10'
+        }.map { |item|
+          Hashie::Mash.new transform_to_contingent_responce(item)
+        }
+      when 'GetAllActiveGraduateGroups'
+        json.map { |hash|
+          hash.deep_transform_keys{ |key| key.underscore.to_sym }
+        }
+      end
     end
   end
 
@@ -27,15 +39,17 @@ class Aspirant
 
   def self.search_params(params)
     {
-      'GroupNumber'      => params[:group],
-      'LastName'         => params[:lastname],
-      'FirstName'        => params[:firstname],
-      'MiddleName'       => params[:patronymic]
-    }
+      'op'          => params[:op],
+      'GroupNumber' => params[:group],
+      'LastName'    => params[:lastname],
+      'FirstName'   => params[:firstname],
+      'MiddleName'  => params[:patronymic]
+    }.delete_if { |_, value| value.blank? }
   end
 
   def self.transform_to_contingent_responce(item)
     {
+      study_id: nil,
       person_id: item['PersonId'],
       begin_study: I18n.l(Time.zone.parse(item['EduBeginDate'])),
       born_on: I18n.l(Time.zone.parse(item['BirthDate'])),

@@ -15,6 +15,7 @@ ru:
         name:              Фамилия, имя, отчество
         patronymic:        Отчество
         include_inactive:  Показать тех, кто не учится
+        include_aspirants: Искать среди аспирантов
 
       student:
         <<:                *search

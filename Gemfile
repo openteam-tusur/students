@@ -12,16 +12,17 @@ group :default do
   gem 'attribute_normalizer'
   gem 'awesome_print'
   gem 'compass-rails'
+  gem 'deep_hash_transform'
   gem 'enumerize'
   gem 'grape'
   gem 'httpclient'
   gem 'openteam-commons', '~> 0.3.3'
   gem 'rails', '~> 3.2.13'
+  gem 'rest-client'
   gem 'russian'
   gem 'savon'
   gem 'show_for'
   gem 'simple_form'
-  gem 'rest-client'
 end
 
 group :development do

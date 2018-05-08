@@ -10,7 +10,11 @@ class StudentsController < ApplicationController
   private
 
   def students
-    @students = Contingent.instance.students(search)
+    @students = if search.include_aspirants?
+                    Aspirant.collection(params[:search])
+                  else
+                    Contingent.instance.students(search)
+                  end
   end
 
   def student

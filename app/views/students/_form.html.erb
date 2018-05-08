@@ -6,6 +6,7 @@
   <%= form.input :person_id %>
   <%= form.input :previous_person_id %>
   <%= form.input :include_inactive, as: :boolean %>
+  <%= form.input :include_aspirants, as: :boolean %>
 
   <%= form.button :submit, 'Искать', class: 'button', name: nil %>
   <%= link_to 'Очистить', root_path, class: 'button' %>

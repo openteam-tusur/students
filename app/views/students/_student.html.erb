@@ -1,0 +1,28 @@
+<tr>
+  <td><%= index + 1 %></td>
+  <td><%= link_to student.study_id, student_path(student.study_id) %></td>
+  <td><%= link_to student.person_id, students_path(search: { person_id: student.person_id, include_inactive: 1 }) %></td>
+  <td><%= student.previous_person_id %></td>
+  <td><%= student.name %></td>
+  <td><%= I18n.l student.born_on %></td>
+  <td><%= student.group %></td>
+  <td><%= student.course %></td>
+  <td>
+    <abbr title="<%= student.subfaculty.name %>">
+      <%= student.subfaculty.abbr %>
+    </abbr>
+  </td>
+  <td>
+    <abbr title="<%= student.faculty.name %>">
+      <%= student.faculty.abbr %>
+    </abbr>
+  </td>
+  <td>
+    <abbr title="<%= student.speciality.name %>">
+      <%= student.speciality.code %>
+    </abbr>
+  </td>
+  <td><%= yes_no student.in_gpo %></td>
+  <td><%= yes_no student.learns %></td>
+  <td><%= student.financing %></td>
+</tr>

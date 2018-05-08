@@ -1,0 +1,32 @@
+<tr>
+  <td><%= index + 1 %></td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>
+    <%= student.lastname %>
+    <%= student.firstname %>
+    <%= student.patronymic %>
+  </td>
+  <td><%= student.born_on %></td>
+  <td><%= student.group.number %></td>
+  <td><%= student.group.course %></td>
+  <td>
+    <abbr title="<%= student.group.subfaculty.name %>">
+      <%= student.group.subfaculty.abbr %>
+    </abbr>
+  </td>
+  <td>
+    <abbr title="<%= student.group.subfaculty.faculty.name %>">
+      <%= student.group.subfaculty.faculty.abbr %>
+    </abbr>
+  </td>
+  <td>
+    <abbr title="<%= student.group.speciality.name %>">
+      <%= student.group.speciality.code %>
+    </abbr>
+  </td>
+  <td>&mdash;</td>
+  <td>да</td>
+  <td><%= student.financing %></td>
+</tr>

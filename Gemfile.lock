@@ -98,6 +98,7 @@ GEM
       highline (>= 1.5.2)
       multi_json (>= 1.1)
     connection_pool (2.2.1)
+    deep_hash_transform (1.0.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     domain_name (0.5.20180417)
@@ -299,6 +300,7 @@ DEPENDENCIES
   brakeman
   capistrano-db-tasks (= 0.4)
   compass-rails
+  deep_hash_transform
   enumerize
   grape
   httpclient

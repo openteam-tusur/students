@@ -4,6 +4,7 @@ class Search < Model
   attribute :lastname
   attribute :group
   attribute :include_inactive, type: Boolean
+  attribute :include_aspirants, type: Boolean
   attribute :person_id, type: Integer
   attribute :previous_person_id, type: Integer
   attribute :study_id, type: Integer
