@@ -38,6 +38,22 @@ class API::Students < Grape::API
         group[:group_name] == params[:number]
       } if params[:number].present?
 
+      groups.each do |g|
+        params = {
+          group: g[:group_name],
+          include_inactive: '1'
+        }
+        if g[:group_name].scan(/\d{6}-\d/).any?
+          g[:students] = Aspirant.collection(params).count
+          params[:include_inactive] = '0'
+          g[:active_students] = Aspirant.collection(params).count
+        else
+          g[:students] = Contingent.instance.students(Search.new(params)).count
+          params[:include_inactive] = '0'
+          g[:active_students] = Contingent.instance.students(Search.new(params)).count
+        end
+      end
+
       groups
     end
   end
