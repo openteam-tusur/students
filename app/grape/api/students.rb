@@ -65,9 +65,11 @@ class API::Students < Grape::API
       end
 
       def finded_students
-        @finded_students ||= Contingent.instance.students(search)
-        @aspirants ||= Aspirant.collection(params) if params[:aspirant]
-        @finded_students | (@aspirants || [])
+        if params[:aspirant]
+          @aspirants ||= Aspirant.collection(params)
+        else
+          @finded_students ||= Contingent.instance.students(search)
+        end
       end
 
       def by_subfaculty
