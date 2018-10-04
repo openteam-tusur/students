@@ -43,7 +43,8 @@ class Aspirant
       'GroupNumber' => params[:group],
       'LastName'    => params[:lastname],
       'FirstName'   => params[:firstname],
-      'MiddleName'  => params[:patronymic]
+      'MiddleName'  => params[:patronymic],
+      'PersonId'    => params[:person_id]
     }.delete_if { |_, value| value.blank? }
   end
 
