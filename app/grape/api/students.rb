@@ -66,7 +66,7 @@ class API::Students < Grape::API
 
       def finded_students
         if params[:aspirant] == 'true'
-          @aspirants ||= Aspirant.collection(params)
+          @finded_students ||= Aspirant.collection(params)
         else
           @finded_students ||= Contingent.instance.students(search)
         end

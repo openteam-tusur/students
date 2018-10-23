@@ -50,7 +50,7 @@ class Aspirant
 
   def self.transform_to_contingent_responce(item)
     {
-      study_id: nil,
+      study_id: item['PersonId'],
       person_id: item['PersonId'],
       begin_study: I18n.l(Time.zone.parse(item['EduBeginDate'])),
       born_on: I18n.l(Time.zone.parse(item['BirthDate'])),
