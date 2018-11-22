@@ -50,7 +50,11 @@ class API::Students < Grape::API
         else
           g[:students] = Contingent.instance.students(Search.new(params)).count
           params[:include_inactive] = '0'
-          g[:active_students] = Contingent.instance.students(Search.new(params)).count
+
+          active_students = Contingent.instance.students(Search.new(params))
+          g[:active_students] = active_students.count
+          g[:budget_active_students] = active_students.select{|as| as[:financing] == 'Бюджет'}.count
+          g[:paid_active_students] = active_students.select{|as| as[:financing] == 'ПВЗ'}.count
         end
       end
 
