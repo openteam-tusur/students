@@ -27,7 +27,7 @@ class API::Students < Grape::API
 
   namespace :groups do
     get "/" do
-      if params[:aspirant]
+      if params[:number] =~ /\d{6}-\d/ || params[:aspirant] == 'true'
         groups = Aspirant.collection(params.merge({
           op: 'GetAllActiveGraduateGroups'
         }))
@@ -43,7 +43,7 @@ class API::Students < Grape::API
           group: g[:group_name],
           include_inactive: '1'
         }
-        if g[:group_name].scan(/\d{6}-\d/).any?
+        if g[:group_name] =~ /\d{6}-\d/
           active_students = Aspirant.collection(params)
           g[:students] = active_students.count
 
@@ -73,7 +73,7 @@ class API::Students < Grape::API
       end
 
       def finded_students
-        if params[:aspirant] == 'true'
+        if params[:group] =~ /\d{6}-\d/ || params[:aspirant] == 'true'
           @finded_students ||= Aspirant.collection(params)
         else
           @finded_students ||= Contingent.instance.students(search)
