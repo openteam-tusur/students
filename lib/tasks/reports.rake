@@ -2,6 +2,107 @@ require 'progress_bar'
 
 namespace :reports do
 
+  desc 'Вычисление разницы актуальных групп в контингенте и на портале'
+  task active_groups: :environment do
+
+    unless Rails.env.production?
+      puts 'run this task with'
+      puts 'RAILS_ENV=production'
+      puts 'exit...'
+      exit(1)
+    end
+
+    json = Rails.cache.read('active-groups')
+
+    # json = nil # uncomment this if need force update groups
+    # or run
+    # bundle exec rake tmp:cache:clear
+
+    if json.blank?
+      active_groups = []
+
+      ap 'Собираем группы бакалавров, специалистов и магистров из контингента'
+
+      groups_list = Contingent.instance.groups
+
+      pb = ProgressBar.new(groups_list.count)
+
+      groups_list.each do |group|
+        faculty_abbr = group[:education].try(:[], :faculty).try(:[], :short_name)
+
+        if faculty_abbr =~ /АФ|ДепОбр|ФДО/
+          # АФ     - Академический факультет
+          # ДепОбр - Департамент образования
+          # ФДО    - Факультет дистанционного обучения
+
+          pb.increment!
+
+          next
+        end
+
+        if group[:group_name] =~ /(_+|инд)$/
+          # 1А6_, з-54Э__, 878-М1_, з-54У-инд и т.д.
+
+          pb.increment!
+
+          next
+        end
+
+        students_list = Contingent.instance.students(
+          Search.new(
+            group: group[:group_name],
+            include_inactive: false
+          )
+        )
+
+        if students_list.any?
+          active_groups.push({
+            number: group[:group_name],
+            students_count: students_list.count
+          })
+        end
+
+        pb.increment!
+      end
+
+      ap 'Собираем группы аспирантов из контингента'
+
+      groups_list = Aspirant.collection({ op: 'GetAllActiveGraduateGroups' })
+
+      pb = ProgressBar.new(groups_list.count)
+
+      groups_list.each do |group|
+        students_list = Aspirant.collection(
+          group: group[:group_name]
+        )
+
+        if students_list.any?
+          active_groups.push({
+            number: group[:group_name],
+            students_count: students_list.count
+          })
+        end
+
+        pb.increment!
+      end
+
+      Rails.cache.write('active-groups', active_groups.to_json)
+    else
+      active_groups = JSON.load(json)
+    end
+
+    contingent_numbers = active_groups.map{ |hash| hash['number'] || hash[:number] }.sort
+
+    ap 'Забираем группы актуальных и черновиков планов на портале'
+    edu_numbers = JSON.load(RestClient.get("#{Settings['edu.url']}/api/v2/group_infos"))['groups'] rescue []
+
+    ap 'Группы, которые есть только в контингенте'
+    ap (contingent_numbers - edu_numbers)
+
+    ap 'Группы, которые есть только на портале'
+    ap (edu_numbers - contingent_numbers)
+  end
+
   desc 'Генерация списка групп студентов с номерами зачётных книжек'
   task record_books: :environment do
     groups_list = Contingent.instance.groups
