@@ -8,8 +8,10 @@
       <tr>
         <th>№</th>
         <th>ID</th>
-        <th>Person ID</th>
-        <th>Prev Person ID</th>
+        <% if params['search']['include_aspirants'] != '1' %>
+          <th>Person ID</th>
+          <th>Prev Person ID</th>
+        <% end %>
         <th>Фамилия, имя, отчество</th>
         <th>Дата рождения</th>
         <th>Группа</th>
@@ -17,7 +19,9 @@
         <th>Кафедра</th>
         <th>Факультет</th>
         <th>Специальность</th>
-        <th>В ГПО</th>
+        <% if params['search']['include_aspirants'] != '1' %>
+          <th>В ГПО</th>
+        <% end %>
         <th>Учится</th>
         <th>Бюджет/ПВЗ</th>
       </tr>

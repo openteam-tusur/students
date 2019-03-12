@@ -1,8 +1,6 @@
 <tr>
   <td><%= index + 1 %></td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
+  <td><%= student.person_id %></td>
   <td>
     <%= student.lastname %>
     <%= student.firstname %>
@@ -26,7 +24,6 @@
       <%= student.group.speciality.code %>
     </abbr>
   </td>
-  <td>&mdash;</td>
-  <td>да</td>
+  <td><%= student.learns %></td>
   <td><%= student.financing %></td>
 </tr>

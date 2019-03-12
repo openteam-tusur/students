@@ -64,7 +64,7 @@ class Aspirant
       patronymic: item['MiddleName'],
       gender: item['Sex'].gsub('М', 'мужской').gsub('Ж', 'женский'),
       financing: item['FinanceType'].to_s.gsub('1', 'Бюджет').gsub('2', 'ПВЗ'),
-      learns: true,
+      learns: (item.try(:[], 'Status').try(:[], 'DictionaryId') == '10') ? 'да' : 'нет',
       education: {
         params: {
           edu_id: nil,
