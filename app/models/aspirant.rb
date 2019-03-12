@@ -22,9 +22,12 @@ class Aspirant
 
       case params['op']
       when 'GetGraduatesByCriteria'
-        json.select { |item|
-          item.try(:[], 'Status').try(:[], 'DictionaryId') == '10'
-        }.map { |item|
+        if params['IncludeInactive'] != '1'
+          json = json.select { |item|
+            item.try(:[], 'Status').try(:[], 'DictionaryId') == '10'
+          }
+        end
+        json.map { |item|
           Hashie::Mash.new transform_to_contingent_responce(item)
         }
       when 'GetAllActiveGraduateGroups'
@@ -44,7 +47,8 @@ class Aspirant
       'LastName'    => params[:lastname],
       'FirstName'   => params[:firstname],
       'MiddleName'  => params[:patronymic],
-      'PersonId'    => params[:person_id]
+      'PersonId'    => params[:person_id],
+      'IncludeInactive' => params[:include_inactive]
     }.delete_if { |_, value| value.blank? }
   end
 
