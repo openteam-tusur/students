@@ -207,7 +207,7 @@ namespace :reports do
     report.serialize(Rails.root.join(%(record-books-#{Date.today}.xlsx)))
   end
 
-  desc 'Генерация списка групп РКФ, РТФ, ФВС, ФЭТ 1 курса с количеством студентов'
+  desc 'Генерация списка групп с количеством студентов'
   task groups_with_count: :environment do
     groups_list = Contingent.instance.groups
     array = Hashie::Mash.new(groups: groups_list)
@@ -243,8 +243,8 @@ namespace :reports do
     groups_list = array.
       groups.
       select{ |group|
-        %W[РКФ РТФ ФВС ФЭТ].include?(group.education.faculty.short_name) &&
-        %W[бакалавриат инженерия].include?(group.education.speciality.speciality_type_name) &&
+        #%W[РКФ РТФ ФВС ФЭТ].include?(group.education.faculty.short_name) &&
+        %W[бакалавриат инженерия магистратура].include?(group.education.speciality.speciality_type_name) &&
         group.education.is_active
       }
 
@@ -265,7 +265,20 @@ namespace :reports do
       ws.add_row [
         faculty
       ], types: [:string], style: center_bold_style
-      ws.merge_cells %(A#{index}:C#{index})
+      ws.merge_cells %(A#{index}:G#{index})
+
+      index += 1
+
+      ws.add_row [
+        'Номер',
+        'Уровень',
+        'Направление',
+        'Кафедра',
+        'Бюджет',
+        'ПВЗ',
+        'Всего'
+      ], types: [:string, :string, :string],
+      style: border_style
 
       groups.sort_by{ |group|
         [
@@ -274,10 +287,10 @@ namespace :reports do
         ]
       }.each do |group|
 
-        if group.course != '1'
-          pb.increment!
-          next
-        end
+        #if group.course != '1'
+          #pb.increment!
+          #next
+        #end
 
         students_list = Contingent.instance.students(
           Search.new(group: group.group_name)
@@ -287,8 +300,12 @@ namespace :reports do
           index += 1
 
           ws.add_row [
-            %(#{group.education.speciality.speciality_code} #{group.education.speciality.speciality_name}),
             group.group_name,
+            group.education.speciality.speciality_type_name,
+            %(#{group.education.speciality.speciality_code} #{group.education.speciality.speciality_name}),
+            group.education.sub_faculty.short_name,
+            students_list.select{ |student| student.financing == 'Бюджет' }.count,
+            students_list.reject{ |student| student.financing == 'Бюджет' }.count,
             students_list.count
           ], types: [:string, :string, :string],
           style: border_style
