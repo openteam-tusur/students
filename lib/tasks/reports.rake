@@ -2,6 +2,72 @@ require 'progress_bar'
 
 namespace :reports do
 
+  desc 'Группы с количеством бюджета/ПВЗ и признаком последнего курса'
+  task groups_with_last_course: :environment do
+    groups = Contingent.instance.groups.
+      map{ |group| Hashie::Mash.new group }.
+      select{ |group| group.education.is_active && group.course.to_i <= group.years_count.to_i }.
+      sort_by(&:group_name)
+
+    report = Axlsx::Package.new
+    wb = report.workbook
+    border_style = wb.styles.add_style(
+      {
+        alignment: {
+          vertical: :center,
+          wrap_text: true
+        },
+        border: { style: :thin, color: '00' }
+      }
+    )
+    ws = wb.add_worksheet
+    cells_types = []
+    7.times{ cells_types << :string }
+    ws.add_row [
+      'Группа',
+      'Курс',
+      'Лет обучения',
+      'Выпуск',
+      'Бюджет',
+      'ПВЗ',
+      'Всего студентов',
+    ], types: cells_types,
+    style: border_style
+
+    pb = ProgressBar.new(groups.count)
+
+    groups.each do |group|
+      if group.course.to_i > group.years_count.to_i
+        pb.increment!
+        next
+      end
+
+      params = { group: group.group_name }
+      search ||= Search.new(params)
+      students = Contingent.instance.students(search)
+
+      if students.blank?
+        pb.increment!
+        next
+      end
+      budget, paid = students.partition{ |student| student.financing == 'Бюджет' }
+      ws.add_row [
+        group.group_name,
+        group.course,
+        group.years_count,
+        group.course.to_i == group.years_count.to_i ? 'Да' : 'Нет',
+        budget.count,
+        paid.count,
+        students.count
+      ], types: cells_types,
+      style: border_style
+
+      pb.increment!
+    end
+
+    report.serialize(Rails.root.join(%(groups-with-last-course-#{Date.today}.xlsx)))
+  end
+
   desc 'Вычисление разницы актуальных групп в контингенте и на портале'
   task active_groups: :environment do
 
