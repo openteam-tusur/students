@@ -3,7 +3,7 @@ require 'progress_bar'
 namespace :reports do
 
   desc 'Группы с количеством бюджета/ПВЗ и признаком последнего курса'
-  task groups_with_last_course: :environment do
+  task groups_statistics: :environment do
     groups = Contingent.instance.groups.
       map{ |group| Hashie::Mash.new group }.
       select{ |group| group.education.is_active && group.course.to_i <= group.years_count.to_i }.
@@ -21,18 +21,32 @@ namespace :reports do
       }
     )
     ws = wb.add_worksheet
-    cells_types = []
-    7.times{ cells_types << :string }
-    ws.add_row [
+
+    header = [
       'Группа',
       'Курс',
+      'Факультет',
+      'Кафедра',
       'Лет обучения',
       'Выпуск',
       'Бюджет',
       'ПВЗ',
       'Всего студентов',
-    ], types: cells_types,
-    style: border_style
+    ]
+
+    alpha_table = {}
+    (('A'...'Z').zip(1...26)).each { |elem| alpha_table[elem[1]] = elem[0] }
+
+    ws.add_row [
+      %(Статистика по группам, #{I18n.l Time.zone.now, format: '%d.%m.%Y %H:%M'})
+    ], types: [:string], style: border_style
+    ws.merge_cells %(A1:#{alpha_table[header.count]}1)
+
+    cells_types = []
+    header.count.times{ cells_types << :string }
+
+    ws.add_row header,
+      types: cells_types, style: border_style
 
     pb = ProgressBar.new(groups.count)
 
@@ -43,7 +57,7 @@ namespace :reports do
       end
 
       params = { group: group.group_name }
-      search ||= Search.new(params)
+      search = Search.new(params)
       students = Contingent.instance.students(search)
 
       if students.blank?
@@ -54,6 +68,8 @@ namespace :reports do
       ws.add_row [
         group.group_name,
         group.course,
+        (group.education.faculty.short_name rescue ''),
+        (group.education.sub_faculty.short_name rescue ''),
         group.years_count,
         group.course.to_i == group.years_count.to_i ? 'Да' : 'Нет',
         budget.count,
@@ -65,7 +81,7 @@ namespace :reports do
       pb.increment!
     end
 
-    report.serialize(Rails.root.join(%(groups-with-last-course-#{Date.today}.xlsx)))
+    report.serialize(Rails.root.join(%(groups-statistics-#{Date.today}.xlsx)))
   end
 
   desc 'Вычисление разницы актуальных групп в контингенте и на портале'
