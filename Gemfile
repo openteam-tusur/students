@@ -11,7 +11,8 @@ group :default do
   gem 'active_attr'
   gem 'attribute_normalizer'
   gem 'awesome_print'
-  gem 'axlsx'
+  gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844' # see https://github.com/caxlsx/axlsx_rails#installation
+  gem 'axlsx_rails'
   gem 'compass-rails'
   gem 'deep_hash_transform'
   gem 'enumerize'
@@ -22,6 +23,7 @@ group :default do
   gem 'progress_bar'
   gem 'rails', '~> 3.2.13'
   gem 'rest-client'
+  gem 'rubyzip', '>= 1.2.1'
   gem 'russian'
   gem 'savon'
   gem 'show_for'
