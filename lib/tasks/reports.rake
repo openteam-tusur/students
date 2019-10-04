@@ -20,7 +20,19 @@ namespace :reports do
         border: { style: :thin, color: '00' }
       }
     )
-    ws = wb.add_worksheet
+    border_center_style = wb.styles.add_style(
+      {
+        b: true,
+        alignment: {
+          vertical: :center,
+          horizontal: :center,
+          wrap_text: true
+        },
+        border: { style: :thin, color: '00' }
+      }
+    )
+    worksheet_title = %(Статистика по группам, #{I18n.l Time.zone.now, format: '%d.%m.%Y %H:%M'})
+    ws = wb.add_worksheet name: worksheet_title.split(',').last.squish.gsub(':', '-')
 
     header = [
       'Группа',
@@ -37,48 +49,78 @@ namespace :reports do
     alpha_table = {}
     (('A'...'Z').zip(1...26)).each { |elem| alpha_table[elem[1]] = elem[0] }
 
+    index = 1
     ws.add_row [
-      %(Статистика по группам, #{I18n.l Time.zone.now, format: '%d.%m.%Y %H:%M'})
-    ], types: [:string], style: border_style
-    ws.merge_cells %(A1:#{alpha_table[header.count]}1)
+      worksheet_title
+    ], types: [:string], style: border_center_style
+    ws.merge_cells %(A#{index}:#{alpha_table[header.count]}#{index})
 
     cells_types = []
     header.count.times{ cells_types << :string }
 
+    index += 1
     ws.add_row header,
       types: cells_types, style: border_style
 
     pb = ProgressBar.new(groups.count)
 
-    groups.each do |group|
-      if group.course.to_i > group.years_count.to_i
-        pb.increment!
-        next
+    grouped_groups = groups.group_by{ |group|
+      speciality = group.education.speciality
+      [
+        speciality.speciality_code,
+        speciality.speciality_name
+      ].join(' ')
+    }.sort_by{ |speciality, _|
+      code = speciality.split(' ').first
+      sign = code
+      if code =~ /\./
+        part = code.split('.')
+        sign = [part.second, part.first, part.third].join
+      else
+        sign = ['99', code].join
       end
 
-      params = { group: group.group_name }
-      search = Search.new(params)
-      students = Contingent.instance.students(search)
+      sign
+    }
 
-      if students.blank?
-        pb.increment!
-        next
-      end
-      budget, paid = students.partition{ |student| student.financing == 'Бюджет' }
+    grouped_groups.each do |speciality, grps|
+      index += 1
       ws.add_row [
-        group.group_name,
-        group.course,
-        (group.education.faculty.short_name rescue ''),
-        (group.education.sub_faculty.short_name rescue ''),
-        group.years_count,
-        group.course.to_i == group.years_count.to_i ? 'Да' : 'Нет',
-        budget.count,
-        paid.count,
-        students.count
-      ], types: cells_types,
-      style: border_style
+        speciality
+      ], types: [:string], style: border_center_style
+      ws.merge_cells %(A#{index}:#{alpha_table[header.count]}#{index})
+      grps.each do |group|
+        if group.course.to_i > group.years_count.to_i
+          pb.increment!
+          next
+        end
 
-      pb.increment!
+        params = { group: group.group_name }
+        search = Search.new(params)
+        students = Contingent.instance.students(search)
+
+        if students.blank?
+          pb.increment!
+          next
+        end
+
+        budget, paid = students.partition{ |student| student.financing == 'Бюджет' }
+        index += 1
+        ws.add_row [
+          group.group_name,
+          group.course,
+          (group.education.faculty.short_name rescue ''),
+          (group.education.sub_faculty.short_name rescue ''),
+          group.years_count,
+          group.course.to_i == group.years_count.to_i ? 'Да' : 'Нет',
+          budget.count,
+          paid.count,
+          students.count
+        ], types: cells_types,
+        style: border_style
+
+        pb.increment!
+      end
     end
 
     report.serialize(Rails.root.join(%(groups-statistics-#{Date.today}.xlsx)))
