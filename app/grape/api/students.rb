@@ -41,23 +41,19 @@ class API::Students < Grape::API
       groups.each do |g|
         params = {
           group: g[:group_name],
-          include_inactive: '0'
+          include_inactive: '1'
         }
         if g[:group_name] =~ /\d{6}-\d/
           active_students = Aspirant.collection(params)
-          g[:students] = active_students.count
-
-          g[:active_students] = active_students.count
-          g[:budget_active_students] = active_students.select{|as| as[:financing] == 'Бюджет'}.count
-          g[:paid_active_students] = active_students.select{|as| as[:financing] == 'ПВЗ'}.count
         else
           active_students = Contingent.instance.students(Search.new(params))
-          g[:students] = active_students.count
-
-          g[:active_students] = active_students.count
-          g[:budget_active_students] = active_students.select{|as| as[:financing] == 'Бюджет'}.count
-          g[:paid_active_students] = active_students.select{|as| as[:financing] == 'ПВЗ'}.count
         end
+        g[:students] = active_students.count
+
+        active_students = active_students.select{ |student| student.learns? }
+        g[:active_students] = active_students.count
+        g[:budget_active_students] = active_students.select{|as| as[:financing] == 'Бюджет'}.count
+        g[:paid_active_students] = active_students.select{|as| as[:financing] == 'ПВЗ'}.count
       end
 
       groups
