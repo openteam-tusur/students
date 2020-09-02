@@ -1,6 +1,59 @@
 require 'progress_bar'
+require 'csv'
 
 namespace :reports do
+
+  desc 'Дубли активных бакалавров и магистров по ФИО и дате рождения'
+  task dobles: :environment do
+    unless Rails.env.production?
+      puts 'run this task with'
+      puts 'RAILS_ENV=production'
+      puts 'exit...'
+      exit(1)
+    end
+
+    # bundle exec rake tmp:cache:clear
+
+    groups = Contingent.instance.groups.
+      map{ |group| Hashie::Mash.new group }.
+      select{ |group| group.education.is_active }
+
+    pb = ProgressBar.new(groups.count)
+    students = []
+
+    groups.each do |group|
+      params = {
+        group: group.group_name,
+        include_inactive: false,
+        include_aspirants: false,
+      }
+      search = Search.new(params)
+      students_in_group = Contingent.instance.students(search)
+
+      students << students_in_group
+      pb.increment!
+    end
+
+    students.flatten!.reverse!
+
+    students = students.group_by{ |student|
+      [%(#{student.lastname} #{student.firstname}), student.born_on].join(', ')
+    }.select{ |_, v| v.many? }
+
+    CSV.open(%(active-doubles-#{Date.today}.csv), 'wb', col_sep: ';') do |csv|
+      students.each do |name, items|
+        items.each do |item|
+          csv << [
+            name.split(',').first.squish,
+            item.born_on,
+            item.education.faculty.abbr,
+            %('#{item.group}),
+            item.speciality.kind,
+          ]
+        end
+      end
+    end
+  end
 
   desc 'Группы с количеством бюджета/ПВЗ и признаком последнего курса'
   task groups_statistics: :environment do
