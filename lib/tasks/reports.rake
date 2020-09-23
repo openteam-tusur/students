@@ -55,6 +55,26 @@ namespace :reports do
     end
   end
 
+  desc 'Количество студентов 1 курса по факультетам'
+  task first_year_count: :environment do
+    groups = Contingent.instance.groups.
+      map{ |group| Hashie::Mash.new group }.
+      select{ |group| group.education.is_active && group.course.to_i <= group.years_count.to_i }.
+      sort_by(&:group_name)
+
+    groups.group_by{ |g| g.education.faculty.short_name }.each do |abbr, grps|
+      count = 0
+      grps.each do |group|
+        next if group.course != '1'
+        params = { group: group.group_name }
+        search = Search.new(params)
+        students = Contingent.instance.students(search)
+        count += students.count
+      end
+      ap %(#{abbr}: #{count})
+    end
+  end
+
   desc 'Группы с количеством бюджета/ПВЗ и признаком последнего курса'
   task groups_statistics: :environment do
     groups = Contingent.instance.groups.
