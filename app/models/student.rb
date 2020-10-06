@@ -38,6 +38,20 @@ class Student < Model
     Contingent.instance.student_hostels(self)
   end
 
+  def orders_data
+    url = [
+      Settings['card_info.url'],
+      "&contingentID=",
+      person_id,
+    ].join
+    resource = RestClient::Resource.new(
+      url, Settings['card_info.login'], Settings['card_info.pass']
+    )
+    response = resource.get
+
+    Hashie::Mash.new(JSON.load(response.body)).orders
+  end
+
   def self.from(hash)
     Student.new(
       study_id: hash[:study_id],

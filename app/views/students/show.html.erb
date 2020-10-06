@@ -23,7 +23,16 @@
     <p><strong>Комната:</strong> <%= hostel_living.room_number %></p>
     <p><strong>Начало:</strong> <%= hostel_living.start_date %></p>
     <p><strong>Окончание:</strong> <%= hostel_living.end_date %></p>
-    <hr>
+    <hr />
+  <% end %>
+<% end %>
+
+<% if student.orders_data.any? %>
+  <h4>Приказы</h4>
+  <% student.orders_data.each do |order| %>
+    <p>№ <%= order.numb %> от <%= order.date %></p>
+    <p><%= order.title %></p>
+    <hr />
   <% end %>
 <% end %>
 
