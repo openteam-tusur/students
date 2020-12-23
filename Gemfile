@@ -23,6 +23,7 @@ group :default do
   gem 'progress_bar'
   gem 'rails', '~> 3.2.13'
   gem 'rest-client'
+  gem 'roo'
   gem 'rubyzip', '>= 1.2.1'
   gem 'russian'
   gem 'savon'

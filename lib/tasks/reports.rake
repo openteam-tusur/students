@@ -1,10 +1,156 @@
-require 'progress_bar'
 require 'csv'
+require 'progress_bar'
+require 'roo'
 
 namespace :reports do
 
+  desc 'Сбор данных о приказах о зачислении и отчислении должников за проживание в общежитиях'
+  task hostel_debtors: :environment do
+    xlsx = Roo::Spreadsheet.open('./PVZ-2020-12-10.xlsx')
+    debtors = []
+    orders = []
+    pb = ProgressBar.new(xlsx.last_row - 1)
+    xlsx.each_row_streaming(offset: 1) do |row|
+      debtor = Hashie::Mash.new({
+        index: row[0].value,
+        fullname: row[1].value,
+        hostel: row[2].value,
+        group: row[3].value.to_s,
+        faculty: row[4].value,
+        end_year: row[5].value,
+        begin_order_number: nil,
+        begin_order_date: nil,
+        begin_order_kind: nil,
+        end_order_number: nil,
+        end_order_date: nil,
+        end_order_kind: nil,
+      })
+
+      surname, name, patronymic, patronymic_postfix = debtor.fullname.squish.split(/\s/)
+
+      request_collection = {
+        lastname: surname,
+        firstname: name,
+        patronymic: [patronymic, patronymic_postfix].compact.join(' '),
+        include_inactive: '1'
+      }
+
+      if debtor.group =~ /аспирант/i
+        infos = Aspirant.collection(request_collection)
+
+        info = infos.find do |item|
+          item.orders.find do |order|
+            order.title =~ /Об отчислении/i && order.date =~ /\d{2}\.\d{2}\.#{debtor.end_year}/
+          end
+        end
+
+        if info.present?
+          order = info.orders.find{ |item| item.title =~ /О зачислении/i }
+          debtor.begin_order_number = order.numb
+          debtor.begin_order_date = order.date
+          debtor.begin_order_kind = order.title
+
+          order = info.orders.find{ |item| item.title =~ /Об отчислении/i }
+          debtor.end_order_number = order.numb
+          debtor.end_order_date = order.date
+          debtor.end_order_kind = order.title
+        end
+      else
+        infos = Contingent.instance.students(
+          Search.new(
+            request_collection.merge!(group: debtor.group, include_inactive: true)
+          )
+        )
+
+        if infos.many?
+          ap debtor.fullname
+          ap debtor.group
+          ap infos.map{ |item|
+            [
+              item.name,
+              item.student_state,
+              item.group.number
+            ]
+          }
+        end
+
+        info = infos.first
+
+        if info.orders_data.any?
+          orders << Hashie::Mash.new({
+            debtor: debtor,
+            orders: info.orders_data
+          })
+
+          info.orders_data.each do |order_info|
+            if order_info.title =~ /О зачислении в число студентов|Зачисление переводом из другого ВУЗа/i
+              debtor.begin_order_number = order_info.numb
+              debtor.begin_order_date = order_info.date
+              debtor.begin_order_kind = order_info.title
+
+              break
+            end
+          end
+
+          info.orders_data.reverse.each do |order_info|
+            if order_info.title =~ /Окончание ВУЗа|Отчисление/i
+              debtor.end_order_number = order_info.numb
+              debtor.end_order_date = order_info.date
+              debtor.end_order_kind = order_info.title
+
+              break
+            end
+          end
+
+        else
+          ap request_collection
+          ap debtor.fullname
+          ap info.orders_data
+        end
+      end
+      debtors << debtor
+
+      ap debtor
+
+      pb.increment!
+    end
+
+    CSV.open(%(hostel-debtors-#{Date.today}.csv), 'wb', col_sep: ';') do |csv|
+      csv << [
+        '№',
+        'ФИО',
+        '№ общ.',
+        'группа',
+        'факультет',
+        'год отчисления',
+        'номер приказа о зачислении',
+        'дата приказа о зачислении',
+        'наименование приказа о зачислении',
+        'номер приказа об отчислении',
+        'дата приказа об отчислении',
+        'наименование приказа об отчислении',
+      ]
+      debtors.each_with_index do |debtor, index|
+        csv << [
+          (index + 1),
+          debtor.fullname,
+          debtor.hostel,
+          debtor.group,
+          debtor.faculty,
+          debtor.end_year,
+          debtor.begin_order_number,
+          debtor.begin_order_date,
+          debtor.begin_order_kind,
+          debtor.end_order_number,
+          debtor.end_order_date,
+          debtor.end_order_kind,
+        ]
+      end
+    end
+  end
+
   desc 'Дубли активных бакалавров и магистров по ФИО и дате рождения'
-  task dobles: :environment do
+  task doubles: :environment do
     unless Rails.env.production?
       puts 'run this task with'
       puts 'RAILS_ENV=production'

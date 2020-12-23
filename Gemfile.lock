@@ -228,6 +228,9 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    roo (2.8.2)
+      nokogiri (~> 1)
+      rubyzip (>= 1.2.1, < 2.0.0)
     ruby2ruby (2.0.7)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
@@ -331,6 +334,7 @@ DEPENDENCIES
   progress_bar
   rails (~> 3.2.13)
   rest-client
+  roo
   rubyzip (>= 1.2.1)
   russian
   sass-rails
