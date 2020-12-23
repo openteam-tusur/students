@@ -52,6 +52,20 @@ class Aspirant
     }.delete_if { |_, value| value.blank? }
   end
 
+  def self.orders_data(person_id)
+    url = [
+      Settings['aspirant_orders.url'],
+      "&aspirantid=",
+      person_id,
+    ].join
+    resource = RestClient::Resource.new(
+      url, Settings['card_info.login'], Settings['card_info.pass']
+    )
+    response = resource.get
+
+    Hashie::Mash.new(JSON.load(response.body)).orders
+  end
+
   def self.transform_to_contingent_responce(item)
     {
       study_id: item['PersonId'],
@@ -124,7 +138,8 @@ class Aspirant
             abbr: item['Group'].try(:[], 'Education').try(:[], 'Faculty').try(:[], 'ShortName')
           }
         }
-      }
+      },
+      orders: self.orders_data(item['PersonId'])
     }
   end
 end
