@@ -25,6 +25,11 @@ class API::Students < Grape::API
     student.attributes.merge(hostel_data: student.hostel_data)
   end
 
+  get '/student/:id/orders_data' do
+    student = Contingent.instance.find_student_by_study_id(params[:id])
+    student.attributes.slice("lastname", "firstname", "patronymic", "study_id").merge(orders_data: student.orders_data)
+  end
+
   namespace :groups do
     get "/" do
       if params[:number] =~ /\d{6}-\d/ || params[:aspirant] == 'true'
