@@ -221,6 +221,49 @@ namespace :reports do
     end
   end
 
+  desc 'Количество бакалавров и специалистов очников по курсам'
+  task count_students: :environment do
+    groups = Contingent.instance.groups.
+      map{ |group| Hashie::Mash.new group }.
+      #select{ |group|
+        #group.education.is_active &&
+        #group.education.edu_form.edu_form_name == 'Очная' &&
+        #['бакалавриат', 'инженерия'].include?(group.education.speciality.speciality_type_name)
+        #['бакалавриат'].include?(group.education.speciality.speciality_type_name) &&
+        #group.course == '4'
+    reject{ |group|
+      group.group_name =~ /ЦОИГ/i
+    }.sort_by(&:group_name)
+
+    #courses_with_groups = groups.sort_by(&:course).group_by(&:course).map{ |course, grps| { course => grps.map(&:group_name) } }
+
+    #courses_with_groups.each do |hash|
+      #course = hash.first.first
+      #groups = hash.first.second
+      #students = []
+      #groups.each do |group|
+        #students += Contingent.instance.students(Search.new(group: group))
+      #end
+      #ap %(#{course} курс: #{students.count} #{Russian.p(students.count, 'студент', 'студента', 'студентов')})
+    #end
+
+    faculties_with_groups = groups.group_by{ |group| group.education.faculty.short_name }
+
+    faculties_with_groups.each do |hash|
+      faculty = hash.first
+      groups = hash.second
+      students = []
+      groups.each do |group|
+        #ap group
+        students += Contingent.instance.students(Search.new(group: group.group_name))
+        #ap students
+      end
+      ap %(#{faculty}: #{students.count} #{Russian.p(students.count, 'студент', 'студента', 'студентов')})
+    end
+
+    nil
+  end
+
   desc 'Группы с количеством бюджета/ПВЗ и признаком последнего курса'
   task groups_statistics: :environment do
     groups = Contingent.instance.groups.
