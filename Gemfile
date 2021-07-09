@@ -19,6 +19,7 @@ group :default do
   gem 'grape'
   gem 'hashie'
   gem 'httpclient'
+  gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
   gem 'openteam-commons', '~> 0.3.3'
   gem 'progress_bar'
   gem 'rails', '~> 3.2.13'

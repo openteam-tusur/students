@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/mimemagicrb/mimemagic.git
+  revision: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
+  ref: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
+  specs:
+    mimemagic (0.3.5)
+
+GIT
   remote: https://github.com/randym/axlsx.git
   revision: c8ac844572b25fda358cc01d2104720c4c42f450
   ref: c8ac844
@@ -158,7 +165,6 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
-    mimemagic (0.3.3)
     mini_portile2 (2.4.0)
     multi_json (1.13.1)
     mustermann (1.0.3)
@@ -329,6 +335,7 @@ DEPENDENCIES
   hashie
   httpclient
   jquery-rails
+  mimemagic!
   openteam-capistrano (~> 1.0.16)
   openteam-commons (~> 0.3.3)
   progress_bar
